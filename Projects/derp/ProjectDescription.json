@@ -1,0 +1,162 @@
+{
+  "ProjectName": "derp",
+  "DLSVersion_LastSaved": "2.1.4",
+  "DLSVersion_EarliestCompatible": "2.0.0",
+  "CreationTime": "2025-04-26T23:53:44.023-07:00",
+  "LastSaveTime": "2025-05-10T19:13:33.343-07:00",
+  "Prefs_MainPinNamesDisplayMode": 1,
+  "Prefs_ChipPinNamesDisplayMode": 1,
+  "Prefs_GridDisplayMode": 1,
+  "Prefs_Snapping": 2,
+  "Prefs_StraightWires": 0,
+  "Prefs_SimPaused": false,
+  "Prefs_SimTargetStepsPerSecond": 10000,
+  "Prefs_SimStepsPerClockTick": 250,
+  "AllCustomChipNames":[
+    "NOT",
+    "AND",
+    "OR",
+    "XOR",
+    "NOR",
+    "D-latch",
+    "16 bits",
+    "2b-decode",
+    "1 bit",
+    "256 bits",
+    "256 nibbles",
+    "256 words",
+    "sum-1",
+    "sum-4",
+    "sum-8",
+    "D FlipFlop",
+    "1 bit register",
+    "4 bit register",
+    "ALU-4",
+    "8 bit Counter",
+    "8 bit register",
+    "8 bit XOR",
+    "8 bit 3 state",
+    "8-bit shift",
+    "Rot R",
+    "Rot L",
+    "trade bit",
+    "Selector",
+    "4x4 mult",
+    "8 pick 1",
+    "3b-decode",
+    "4 bit 3 state",
+    "4 bit AND",
+    "CPU",
+    "half-ass display",
+    "Clock div 2",
+    "4x4 AND",
+    "4x4 OR",
+    "4x4 XOR",
+    "8 bit zero",
+    "256 bytes",
+    "Computer",
+    "8 bit incr",
+    "incr-1",
+    "4-to-8 signed",
+    "Fancy Register",
+    "8 bit NAND",
+    "4k bytes",
+    "4k bits",
+    "64k bits",
+    "64k bytes"
+  ],
+  "StarredList":[
+    {
+      "Name":"IN/OUT",
+      "IsCollection":true
+    },
+    {
+      "Name":"MERGE/SPLIT",
+      "IsCollection":true
+    },
+    {
+      "Name":"BUS",
+      "IsCollection":true
+    },
+    {
+      "Name":"GATES",
+      "IsCollection":true
+    },
+    {
+      "Name":"MEMORY",
+      "IsCollection":true
+    },
+    {
+      "Name":"v1",
+      "IsCollection":true
+    },
+    {
+      "Name":"OTHER",
+      "IsCollection":true
+    },
+    {
+      "Name":"v0",
+      "IsCollection":true
+    },
+    {
+      "Name":"3-STATE BUFFER",
+      "IsCollection":false
+    },
+    {
+      "Name":"64k bytes",
+      "IsCollection":false
+    }
+  ],
+  "ChipCollections":[
+    {
+      "Chips":["CLOCK","PULSE","KEY","3-STATE BUFFER"],
+      "IsToggledOpen":true,
+      "Name":"BASIC"
+    },
+    {
+      "Chips":["IN-1","IN-4","IN-8","OUT-1","OUT-4","OUT-8"],
+      "IsToggledOpen":false,
+      "Name":"IN/OUT"
+    },
+    {
+      "Chips":["1-4BIT","1-8BIT","4-8BIT","4-1BIT","8-4BIT","8-1BIT"],
+      "IsToggledOpen":false,
+      "Name":"MERGE/SPLIT"
+    },
+    {
+      "Chips":["BUS-1","BUS-4","BUS-8"],
+      "IsToggledOpen":false,
+      "Name":"BUS"
+    },
+    {
+      "Chips":["7-SEGMENT","DOT DISPLAY","RGB DISPLAY","LED"],
+      "IsToggledOpen":false,
+      "Name":"DISPLAY"
+    },
+    {
+      "Chips":["ROM 256×16","256 words","256 nibbles"],
+      "IsToggledOpen":false,
+      "Name":"MEMORY"
+    },
+    {
+      "Chips":["NAND","OR","AND","NOT","XOR","NOR","4x4 AND","4x4 OR","4x4 XOR"],
+      "IsToggledOpen":false,
+      "Name":"GATES"
+    },
+    {
+      "Chips":["8 bit register","4 bit register","1 bit register","D FlipFlop","sum-1","sum-4","sum-8","1 bit","16 bits","256 bits","2b-decode","D-latch","Rot R","Rot L","8-bit shift","8 bit 3 state","8 bit Counter","3b-decode","4 bit 3 state","8 bit XOR"],
+      "IsToggledOpen":false,
+      "Name":"v1"
+    },
+    {
+      "Chips":["4x4 mult","half-ass display","CPU","ALU-4","Computer","4k bytes"],
+      "IsToggledOpen":false,
+      "Name":"v0"
+    },
+    {
+      "Chips":["8 pick 1","8 bit incr","8 bit zero","8 bit NAND","4 bit AND","4-to-8 signed","trade bit","Selector","Clock div 2","256 bytes","incr-1","Fancy Register","4k bits","64k bits","64k bytes"],
+      "IsToggledOpen":true,
+      "Name":"OTHER"
+    }
+  ]
+}
