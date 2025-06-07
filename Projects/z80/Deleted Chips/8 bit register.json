@@ -1,0 +1,20 @@
+{
+  "Name": "8 bit register",
+  "NameLocation": 0,
+  "ChipType": 0,
+  "Size": {
+    "x": 1.4,
+    "y": 0.5
+  },
+  "Colour": {
+    "r": 0.6421521,
+    "g": 0.756058335,
+    "b": 0.4688915,
+    "a": 1
+  },
+  "InputPins":[],
+  "OutputPins":[],
+  "SubChips":[],
+  "Wires":[],
+  "Displays": null
+}

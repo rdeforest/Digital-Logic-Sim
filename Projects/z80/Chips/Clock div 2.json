@@ -1,10 +1,9 @@
 {
-  "DLSVersion": "2.1.6",
   "Name": "Clock div 2",
   "NameLocation": 0,
   "ChipType": 0,
   "Size": {
-    "x": 1.025,
+    "x": 0.875,
     "y": 0.5
   },
   "Colour": {
@@ -110,5 +109,5 @@
       "Points":[{"x":-13.75,"y":1.0},{"x":0.0,"y":0.0}]
     }
   ],
-  "Displays": null
+  "Displays":[]
 }

@@ -1,0 +1,135 @@
+{
+  "ProjectName": "fresh z80",
+  "DLSVersion_LastSaved": "2.1.4",
+  "DLSVersion_EarliestCompatible": "2.0.0",
+  "CreationTime": "2025-06-06T17:43:21.217-07:00",
+  "LastSaveTime": "2025-06-06T21:59:11.948-07:00",
+  "Prefs_MainPinNamesDisplayMode": 2,
+  "Prefs_ChipPinNamesDisplayMode": 1,
+  "Prefs_GridDisplayMode": 1,
+  "Prefs_Snapping": 1,
+  "Prefs_StraightWires": 0,
+  "Prefs_SimPaused": false,
+  "Prefs_SimTargetStepsPerSecond": 1000,
+  "Prefs_SimStepsPerClockTick": 250,
+  "AllCustomChipNames":[
+    "XOR",
+    "AND",
+    "D latch",
+    "D M-S Flip-Flop",
+    "NOT",
+    "AND-4",
+    "16x16 Test harness",
+    "8x2 EQU",
+    "OR",
+    "4x2 EQU",
+    "D Flip-Flop test",
+    "Flip Flop",
+    "8 bit counter",
+    "8 bit register",
+    "8 bit 3 state",
+    "4 bit 3 state",
+    "16i8o test",
+    "16i8o test 8b register"
+  ],
+  "StarredList":[
+    {
+      "Name":"IN/OUT",
+      "IsCollection":true
+    },
+    {
+      "Name":"BASIC",
+      "IsCollection":true
+    },
+    {
+      "Name":"MERGE/SPLIT",
+      "IsCollection":true
+    },
+    {
+      "Name":"GATES",
+      "IsCollection":true
+    },
+    {
+      "Name":"D latch",
+      "IsCollection":false
+    },
+    {
+      "Name":"D M-S Flip-Flop",
+      "IsCollection":false
+    },
+    {
+      "Name":"D Flip-Flop test",
+      "IsCollection":false
+    },
+    {
+      "Name":"Flip Flop",
+      "IsCollection":false
+    },
+    {
+      "Name":"8 bit counter",
+      "IsCollection":false
+    },
+    {
+      "Name":"8 bit register",
+      "IsCollection":false
+    },
+    {
+      "Name":"8 bit 3 state",
+      "IsCollection":false
+    },
+    {
+      "Name":"4 bit 3 state",
+      "IsCollection":false
+    },
+    {
+      "Name":"16i8o test",
+      "IsCollection":false
+    },
+    {
+      "Name":"16i8o test 8b register",
+      "IsCollection":false
+    }
+  ],
+  "ChipCollections":[
+    {
+      "Chips":["CLOCK","PULSE","KEY","3-STATE BUFFER"],
+      "IsToggledOpen":false,
+      "Name":"BASIC"
+    },
+    {
+      "Chips":["IN-1","IN-4","IN-8","OUT-1","OUT-4","OUT-8"],
+      "IsToggledOpen":false,
+      "Name":"IN/OUT"
+    },
+    {
+      "Chips":["NAND","XOR","AND","NOT","OR"],
+      "IsToggledOpen":true,
+      "Name":"GATES"
+    },
+    {
+      "Chips":["1-4BIT","1-8BIT","4-8BIT","4-1BIT","8-4BIT","8-1BIT"],
+      "IsToggledOpen":true,
+      "Name":"MERGE/SPLIT"
+    },
+    {
+      "Chips":["BUS-1","BUS-4","BUS-8"],
+      "IsToggledOpen":false,
+      "Name":"BUS"
+    },
+    {
+      "Chips":["7-SEGMENT","DOT DISPLAY","RGB DISPLAY","LED"],
+      "IsToggledOpen":false,
+      "Name":"DISPLAY"
+    },
+    {
+      "Chips":["ROM 256×16"],
+      "IsToggledOpen":false,
+      "Name":"MEMORY"
+    },
+    {
+      "Chips":["D latch","D M-S Flip-Flop","AND-4","16x16 Test harness","8x2 EQU","4x2 EQU","D Flip-Flop test","Flip Flop","8 bit counter"],
+      "IsToggledOpen":true,
+      "Name":"OTHER"
+    }
+  ]
+}

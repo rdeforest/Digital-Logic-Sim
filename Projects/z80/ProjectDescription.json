@@ -1,9 +1,9 @@
 {
   "ProjectName": "z80",
-  "DLSVersion_LastSaved": "2.1.6",
+  "DLSVersion_LastSaved": "2.1.4",
   "DLSVersion_EarliestCompatible": "2.0.0",
   "CreationTime": "2025-04-26T23:53:44.023-07:00",
-  "LastSaveTime": "2025-05-26T22:51:20.936-07:00",
+  "LastSaveTime": "2025-06-06T17:36:00.641-07:00",
   "Prefs_MainPinNamesDisplayMode": 2,
   "Prefs_ChipPinNamesDisplayMode": 1,
   "Prefs_GridDisplayMode": 1,
@@ -33,7 +33,6 @@
     "4 bit register",
     "ALU-4",
     "8 bit Counter",
-    "8 bit register",
     "8x8 XOR",
     "8 bit 3 state",
     "Rot R",
@@ -178,8 +177,8 @@
       "Name":"MEMORY"
     },
     {
-      "Chips":["1 bit register","4 bit register","8 bit register","16b Mem Addr Register"],
-      "IsToggledOpen":false,
+      "Chips":["1 bit register","4 bit register","16b Mem Addr Register"],
+      "IsToggledOpen":true,
       "Name":"Registers"
     },
     {
@@ -203,7 +202,7 @@
       "Name":"v0"
     },
     {
-      "Chips":["NOR 4","NOR 8","negative","BUZZER"],
+      "Chips":["NOR 4","NOR 8","negative","BUZZER","OR 8","add+sub validator","Z80 MBR","MBR validator","1b register validator","D latch validator","D flip-flop (broken)","AND 4","AND 3","8 phase clock"],
       "IsToggledOpen":false,
       "Name":"OTHER"
     }
