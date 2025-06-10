@@ -1,0 +1,77 @@
+{
+  "Name": "Z80 MBR",
+  "NameLocation": 0,
+  "ChipType": 0,
+  "Size": {
+    "x": 1.025,
+    "y": 1.375
+  },
+  "Colour": {
+    "r": 0.99406904,
+    "g": 0.375712842,
+    "b": 0.0140457181,
+    "a": 1
+  },
+  "InputPins":[
+    {
+      "Name":"IN",
+      "ID":496664962,
+      "Position":{
+        "x":-6.0,
+        "y":2.0
+      },
+      "BitCount":8,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"IN",
+      "ID":80860269,
+      "Position":{
+        "x":-6.0,
+        "y":0.875
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"IN",
+      "ID":739529295,
+      "Position":{
+        "x":-6.0,
+        "y":-0.25
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"IN",
+      "ID":473793174,
+      "Position":{
+        "x":-6.0,
+        "y":-1.375
+      },
+      "BitCount":4,
+      "Colour":0,
+      "ValueDisplayMode":0
+    }
+  ],
+  "OutputPins":[],
+  "SubChips":[
+    {
+      "Name":"8 bit register",
+      "ID":1379160796,
+      "Label":"",
+      "Position":{
+        "x":-0.29,
+        "y":0.3125
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":394782830}],
+      "InternalData":null
+    }
+  ],
+  "Wires":[],
+  "Displays": null
+}
