@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "8 bit counter",
   "NameLocation": 0,
   "ChipType": 0,
@@ -43,7 +44,7 @@
         "y":-4.0
       },
       "BitCount":1,
-      "Colour":6,
+      "Colour":7,
       "ValueDisplayMode":0
     }
   ],

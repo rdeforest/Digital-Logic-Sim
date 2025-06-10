@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "8-bit MUX",
   "NameLocation": 0,
   "ChipType": 0,
@@ -18,7 +19,18 @@
       "ID":104877057,
       "Position":{
         "x":-9.625,
-        "y":0.9375
+        "y":-0.5
+      },
+      "BitCount":8,
+      "Colour":4,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"A",
+      "ID":1799202171,
+      "Position":{
+        "x":-9.625,
+        "y":-1.375
       },
       "BitCount":8,
       "Colour":3,
@@ -28,22 +40,11 @@
       "Name":"Select B",
       "ID":241223489,
       "Position":{
-        "x":-9.5,
-        "y":-0.25
+        "x":-9.625,
+        "y":-2.0
       },
       "BitCount":1,
       "Colour":0,
-      "ValueDisplayMode":0
-    },
-    {
-      "Name":"A",
-      "ID":1799202171,
-      "Position":{
-        "x":-9.625,
-        "y":-1.5625
-      },
-      "BitCount":8,
-      "Colour":2,
       "ValueDisplayMode":0
     }
   ],
@@ -52,8 +53,8 @@
       "Name":"Out",
       "ID":1929449114,
       "Position":{
-        "x":-3.375,
-        "y":-0.25
+        "x":-3.75,
+        "y":-1.0
       },
       "BitCount":8,
       "Colour":0,
@@ -62,25 +63,25 @@
   ],
   "SubChips":[
     {
-      "Name":"8 bit 3 state",
+      "Name":"8-bit 3 state",
       "ID":1573344949,
       "Label":"",
       "Position":{
         "x":-6.4025,
-        "y":1.0625
+        "y":-0.625
       },
-      "OutputPinColourInfo":[{"PinColour":3,"PinID":1643970242}],
+      "OutputPinColourInfo":[{"PinColour":4,"PinID":1643970242},{"PinColour":0,"PinID":401943695}],
       "InternalData":null
     },
     {
-      "Name":"8 bit 3 state",
+      "Name":"8-bit 3 state",
       "ID":1506806009,
       "Label":"",
       "Position":{
         "x":-6.4025,
-        "y":-1.4375
+        "y":-1.5
       },
-      "OutputPinColourInfo":[{"PinColour":0,"PinID":1643970242}],
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":1643970242},{"PinColour":0,"PinID":401943695}],
       "InternalData":null
     },
     {
@@ -89,7 +90,7 @@
       "Label":"",
       "Position":{
         "x":-7.8275,
-        "y":-0.25
+        "y":-2.0
       },
       "OutputPinColourInfo":[{"PinColour":0,"PinID":1177405686}],
       "InternalData":null
@@ -154,34 +155,6 @@
     },
     {
       "SourcePinAddress":{
-        "PinID":1177405686,
-        "PinOwnerID":1043325403
-      },
-      "TargetPinAddress":{
-        "PinID":1112777666,
-        "PinOwnerID":1506806009
-      },
-      "ConnectionType":0,
-      "ConnectedWireIndex":-1,
-      "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":-7.25,"y":-0.25},{"x":-7.25,"y":-1.1875},{"x":0.0,"y":0.0}]
-    },
-    {
-      "SourcePinAddress":{
-        "PinID":0,
-        "PinOwnerID":241223489
-      },
-      "TargetPinAddress":{
-        "PinID":1112777666,
-        "PinOwnerID":1573344949
-      },
-      "ConnectionType":1,
-      "ConnectedWireIndex":3,
-      "ConnectedWireSegmentIndex":0,
-      "Points":[{"x":-8.25,"y":-0.25},{"x":-8.25,"y":1.3125},{"x":0.0,"y":0.0}]
-    },
-    {
-      "SourcePinAddress":{
         "PinID":1643970242,
         "PinOwnerID":1506806009
       },
@@ -193,6 +166,34 @@
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
       "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":1177405686,
+        "PinOwnerID":1043325403
+      },
+      "TargetPinAddress":{
+        "PinID":1151704159,
+        "PinOwnerID":1506806009
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":-7.25,"y":-2.0},{"x":-7.25,"y":-1.75},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":241223489
+      },
+      "TargetPinAddress":{
+        "PinID":1151704159,
+        "PinOwnerID":1573344949
+      },
+      "ConnectionType":1,
+      "ConnectedWireIndex":3,
+      "ConnectedWireSegmentIndex":0,
+      "Points":[{"x":-8.375,"y":-2.0},{"x":-8.375,"y":-0.875},{"x":0.0,"y":0.0}]
     }
   ],
   "Displays":[]

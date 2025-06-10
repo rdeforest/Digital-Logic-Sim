@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "Z80 Banked Register",
   "NameLocation": 0,
   "ChipType": 0,
@@ -32,7 +33,7 @@
         "y":-1.375
       },
       "BitCount":1,
-      "Colour":3,
+      "Colour":4,
       "ValueDisplayMode":0
     },
     {
@@ -43,7 +44,7 @@
         "y":-1.875
       },
       "BitCount":1,
-      "Colour":3,
+      "Colour":4,
       "ValueDisplayMode":0
     },
     {
@@ -54,7 +55,7 @@
         "y":-2.375
       },
       "BitCount":1,
-      "Colour":1,
+      "Colour":2,
       "ValueDisplayMode":0
     },
     {
@@ -65,7 +66,7 @@
         "y":-2.875
       },
       "BitCount":1,
-      "Colour":2,
+      "Colour":3,
       "ValueDisplayMode":0
     },
     {
@@ -76,7 +77,7 @@
         "y":-3.375
       },
       "BitCount":1,
-      "Colour":2,
+      "Colour":3,
       "ValueDisplayMode":0
     },
     {
@@ -106,7 +107,7 @@
   ],
   "SubChips":[
     {
-      "Name":"8 bit register",
+      "Name":"8-bit register",
       "ID":1823963620,
       "Label":"",
       "Position":{

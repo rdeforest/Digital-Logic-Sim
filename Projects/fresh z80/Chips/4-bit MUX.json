@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "4-bit MUX",
   "NameLocation": 0,
   "ChipType": 0,
@@ -18,10 +19,10 @@
       "ID":1033037646,
       "Position":{
         "x":-9.5,
-        "y":1.9375
+        "y":2.0625
       },
       "BitCount":4,
-      "Colour":3,
+      "Colour":4,
       "ValueDisplayMode":0
     },
     {
@@ -40,10 +41,10 @@
       "ID":2133047158,
       "Position":{
         "x":-9.5,
-        "y":-0.6875
+        "y":-0.5625
       },
       "BitCount":4,
-      "Colour":2,
+      "Colour":3,
       "ValueDisplayMode":0
     }
   ],
@@ -67,7 +68,7 @@
       "Label":"",
       "Position":{
         "x":-7.8275,
-        "y":-0.25
+        "y":0.0
       },
       "OutputPinColourInfo":[{"PinColour":0,"PinID":1177405686}],
       "InternalData":null
@@ -78,9 +79,9 @@
       "Label":"",
       "Position":{
         "x":-6.4025,
-        "y":2.125
+        "y":2.1875
       },
-      "OutputPinColourInfo":[{"PinColour":3,"PinID":1260180921}],
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":70057425},{"PinColour":4,"PinID":1260180921}],
       "InternalData":null
     },
     {
@@ -89,9 +90,9 @@
       "Label":"",
       "Position":{
         "x":-6.4025,
-        "y":-0.5
+        "y":-0.4375
       },
-      "OutputPinColourInfo":[{"PinColour":2,"PinID":1260180921}],
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":70057425},{"PinColour":3,"PinID":1260180921}],
       "InternalData":null
     }
   ],
@@ -108,7 +109,7 @@
       "ConnectionType":0,
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":-7.25,"y":-0.25},{"x":0.0,"y":0.0}]
+      "Points":[{"x":0.0,"y":0.0},{"x":-7.25,"y":0.0},{"x":-7.25,"y":-0.25},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{
@@ -164,7 +165,7 @@
       "ConnectionType":1,
       "ConnectedWireIndex":3,
       "ConnectedWireSegmentIndex":0,
-      "Points":[{"x":-8.375,"y":0.875},{"x":-8.375,"y":-0.25},{"x":0.0,"y":0.0}]
+      "Points":[{"x":-8.375,"y":0.875},{"x":-8.375,"y":0.0},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{

@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "4-bit adder",
   "NameLocation": 0,
   "ChipType": 0,
@@ -73,7 +74,7 @@
   ],
   "SubChips":[
     {
-      "Name":"1 bit adder",
+      "Name":"1-bit adder",
       "ID":1456910768,
       "Label":"",
       "Position":{
@@ -84,7 +85,7 @@
       "InternalData":null
     },
     {
-      "Name":"1 bit adder",
+      "Name":"1-bit adder",
       "ID":1913105212,
       "Label":"",
       "Position":{
@@ -95,7 +96,7 @@
       "InternalData":null
     },
     {
-      "Name":"1 bit adder",
+      "Name":"1-bit adder",
       "ID":1693568763,
       "Label":"",
       "Position":{
@@ -106,7 +107,7 @@
       "InternalData":null
     },
     {
-      "Name":"1 bit adder",
+      "Name":"1-bit adder",
       "ID":208136889,
       "Label":"",
       "Position":{

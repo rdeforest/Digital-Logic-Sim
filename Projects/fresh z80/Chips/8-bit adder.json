@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "8-bit adder",
   "NameLocation": 0,
   "ChipType": 0,
@@ -18,10 +19,10 @@
       "ID":153913028,
       "Position":{
         "x":-9.875,
-        "y":1.125
+        "y":0.75
       },
       "BitCount":8,
-      "Colour":3,
+      "Colour":4,
       "ValueDisplayMode":0
     },
     {
@@ -32,7 +33,7 @@
         "y":-0.375
       },
       "BitCount":8,
-      "Colour":2,
+      "Colour":3,
       "ValueDisplayMode":0
     },
     {
@@ -53,7 +54,7 @@
       "ID":1459793841,
       "Position":{
         "x":-1.25,
-        "y":1.375
+        "y":1.0
       },
       "BitCount":1,
       "Colour":0,
@@ -89,7 +90,7 @@
       "Label":"",
       "Position":{
         "x":-5.4775,
-        "y":1.0
+        "y":0.625
       },
       "OutputPinColourInfo":[{"PinColour":0,"PinID":2117074736},{"PinColour":0,"PinID":1327204436}],
       "InternalData":null
@@ -111,9 +112,9 @@
       "Label":"",
       "Position":{
         "x":-7.8025,
-        "y":1.125
+        "y":0.75
       },
-      "OutputPinColourInfo":[{"PinColour":3,"PinID":1},{"PinColour":3,"PinID":2}],
+      "OutputPinColourInfo":[{"PinColour":4,"PinID":1},{"PinColour":4,"PinID":2}],
       "InternalData":null
     },
     {
@@ -124,7 +125,7 @@
         "x":-7.8025,
         "y":-0.375
       },
-      "OutputPinColourInfo":[{"PinColour":2,"PinID":1},{"PinColour":2,"PinID":2}],
+      "OutputPinColourInfo":[{"PinColour":3,"PinID":1},{"PinColour":3,"PinID":2}],
       "InternalData":null
     },
     {
@@ -180,7 +181,7 @@
       "ConnectionType":0,
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":-6.875,"y":0.9375},{"x":-6.875,"y":0.25},{"x":-6.25,"y":0.25},{"x":-6.25,"y":-0.1875},{"x":0.0,"y":0.0}]
+      "Points":[{"x":0.0,"y":0.0},{"x":-7.0,"y":0.5625},{"x":-6.25,"y":-0.1875},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{
@@ -208,7 +209,7 @@
       "ConnectionType":0,
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":-4.75,"y":-0.125},{"x":-4.75,"y":0.0},{"x":-6.25,"y":0.5},{"x":-6.25,"y":0.625},{"x":0.0,"y":0.0}]
+      "Points":[{"x":0.0,"y":0.0},{"x":-4.75,"y":-0.125},{"x":-4.75,"y":0.0625},{"x":-6.25,"y":0.0625},{"x":-6.25,"y":0.25},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{
@@ -250,7 +251,7 @@
       "ConnectionType":0,
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":-4.5,"y":0.6875},{"x":-4.5,"y":-0.4375},{"x":0.0,"y":0.0}]
+      "Points":[{"x":0.0,"y":0.0},{"x":-4.5,"y":0.3125},{"x":-4.5,"y":-0.4375},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{
@@ -264,7 +265,7 @@
       "ConnectionType":0,
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":-6.5,"y":-0.1875},{"x":-6.5,"y":0.9375},{"x":0.0,"y":0.0}]
+      "Points":[{"x":0.0,"y":0.0},{"x":-7.0,"y":-0.1875},{"x":-6.25,"y":0.5625},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{

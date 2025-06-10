@@ -1,9 +1,9 @@
 {
   "ProjectName": "fresh z80",
-  "DLSVersion_LastSaved": "2.1.4",
+  "DLSVersion_LastSaved": "2.1.6",
   "DLSVersion_EarliestCompatible": "2.0.0",
   "CreationTime": "2025-06-06T17:43:21.217-07:00",
-  "LastSaveTime": "2025-06-08T01:35:19.482-07:00",
+  "LastSaveTime": "2025-06-10T02:00:02.221-07:00",
   "Prefs_MainPinNamesDisplayMode": 2,
   "Prefs_ChipPinNamesDisplayMode": 1,
   "Prefs_GridDisplayMode": 1,
@@ -26,13 +26,13 @@
     "D Flip-Flop test",
     "Flip Flop",
     "8 bit counter",
-    "8 bit register",
-    "8 bit 3 state",
+    "8-bit register",
+    "8-bit 3 state",
     "4 bit 3 state",
     "8i8o test",
     "16i8o test 8b register",
     "16 bit register",
-    "1 bit adder",
+    "1-bit adder",
     "1-bit adder test",
     "4-bit adder",
     "8-bit adder",
@@ -58,7 +58,7 @@
     "Flag Register",
     "Z80 Register File",
     "3 bit decode",
-    "2 bit ~decode v2",
+    "2 bit ~decode",
     "2 NANDs",
     "Z80 Banked Register",
     "Z80 Instruction Decode",
@@ -67,7 +67,9 @@
     "16i8o flip-flop test",
     "16i16o test",
     "16i16o OpDecode test",
-    "Z80"
+    "Z80",
+    "16-bit inverter",
+    "4-bit ~"
   ],
   "StarredList":[
     {
@@ -91,41 +93,45 @@
       "IsCollection":true
     },
     {
-      "Name":"Z80 Register File",
-      "IsCollection":false
+      "Name":"MEMORY",
+      "IsCollection":true
     },
     {
-      "Name":"Z80 Instruction Decode",
-      "IsCollection":false
+      "Name":"Test",
+      "IsCollection":true
     },
     {
-      "Name":"4-bit MUX",
-      "IsCollection":false
+      "Name":"Clock",
+      "IsCollection":true
     },
     {
-      "Name":"4 bit 7",
-      "IsCollection":false
+      "Name":"Decode/Encode",
+      "IsCollection":true
     },
     {
-      "Name":"16i8o flip-flop test",
-      "IsCollection":false
+      "Name":"3 state",
+      "IsCollection":true
     },
     {
-      "Name":"16i16o test",
-      "IsCollection":false
+      "Name":"MUXen",
+      "IsCollection":true
     },
     {
-      "Name":"16i16o OpDecode test",
-      "IsCollection":false
+      "Name":"Z80 parts",
+      "IsCollection":true
     },
     {
-      "Name":"Z80",
+      "Name":"Math",
+      "IsCollection":true
+    },
+    {
+      "Name":"4 bit 3 state",
       "IsCollection":false
     }
   ],
   "ChipCollections":[
     {
-      "Chips":["CLOCK","PULSE","KEY","3-STATE BUFFER"],
+      "Chips":["CLOCK","PULSE","KEY","3-STATE BUFFER","BUZZER"],
       "IsToggledOpen":false,
       "Name":"BASIC"
     },
@@ -145,29 +151,64 @@
       "Name":"BUS"
     },
     {
-      "Chips":["NAND","XOR","AND","NOT","OR","AND-4","OR 4","4v4 OR","AND 3","8v8 AND","8v8 XOR","8v8 OR"],
-      "IsToggledOpen":false,
-      "Name":"GATES"
-    },
-    {
       "Chips":["7-SEGMENT","DOT DISPLAY","RGB DISPLAY","LED"],
       "IsToggledOpen":false,
       "Name":"DISPLAY"
     },
     {
-      "Chips":["ROM 256×16"],
+      "Chips":["ROM 256×16","D latch","Flip Flop","8-bit register","16 bit register","D M-S Flip-Flop","16-bit MAR"],
       "IsToggledOpen":false,
       "Name":"MEMORY"
     },
     {
-      "Chips":["D latch","8i8o Test harness","8x2 EQU","4x2 EQU","D Flip-Flop test","Flip Flop","8i8o test","16i8o test 8b register","1 bit adder","1-bit adder test","4-bit adder","8-bit adder","16-bit MUX","8-bit inverter","16-bit 3 state","test 4CLK","4CLK RESET","4CLK phase and rst","ALU","4to1 8bit MUX","8-bit MUX","IsZero","Parity","Flag Register","Z80 Register File"],
-      "IsToggledOpen":true,
-      "Name":"OTHER"
+      "Chips":["NAND","XOR","AND","NOT","OR","AND-4","OR 4","4v4 OR","AND 3","8v8 AND","8v8 XOR","8v8 OR","2 NANDs"],
+      "IsToggledOpen":false,
+      "Name":"GATES"
     },
     {
-      "Chips":["8 bit register","16 bit register","4 bit 3 state","8 bit 3 state","8 bit counter","D M-S Flip-Flop","16-bit adder","16-bit MAR"],
-      "IsToggledOpen":true,
+      "Chips":["8 bit counter"],
+      "IsToggledOpen":false,
       "Name":"Parts"
+    },
+    {
+      "Chips":["16i16o OpDecode test","16i16o test","16i8o flip-flop test","test 4CLK","8i8o Test harness","8i8o test","16i8o test 8b register","1-bit adder test","D Flip-Flop test"],
+      "IsToggledOpen":false,
+      "Name":"Test"
+    },
+    {
+      "Chips":["4CLK phase and rst","4CLK RESET"],
+      "IsToggledOpen":false,
+      "Name":"Clock"
+    },
+    {
+      "Chips":["16-bit adder","1-bit adder","4-bit adder","8-bit adder","8-bit inverter","Parity","4x2 EQU","8x2 EQU","4 bit 7","ALU","IsZero"],
+      "IsToggledOpen":false,
+      "Name":"Math"
+    },
+    {
+      "Chips":["Flag Register","Z80 Register File","Z80 Banked Register","Z80 Instruction Decode","Z80"],
+      "IsToggledOpen":false,
+      "Name":"Z80 parts"
+    },
+    {
+      "Chips":["16-bit MUX","4to1 8bit MUX","8-bit MUX","4-bit MUX"],
+      "IsToggledOpen":false,
+      "Name":"MUXen"
+    },
+    {
+      "Chips":["8-bit 3 state","4 bit 3 state","16-bit 3 state"],
+      "IsToggledOpen":false,
+      "Name":"3 state"
+    },
+    {
+      "Chips":["2 bit ~decode","3 bit decode"],
+      "IsToggledOpen":false,
+      "Name":"Decode/Encode"
+    },
+    {
+      "Chips":[],
+      "IsToggledOpen":true,
+      "Name":"OTHER"
     }
   ]
 }

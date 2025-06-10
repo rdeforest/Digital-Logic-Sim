@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "16-bit 3 state",
   "NameLocation": 0,
   "ChipType": 0,
@@ -15,21 +16,10 @@
   "InputPins":[
     {
       "Name":"IN",
-      "ID":1909644365,
-      "Position":{
-        "x":-8.625,
-        "y":3.875
-      },
-      "BitCount":1,
-      "Colour":0,
-      "ValueDisplayMode":0
-    },
-    {
-      "Name":"IN",
       "ID":1293026740,
       "Position":{
         "x":-7.625,
-        "y":3.5
+        "y":3.75
       },
       "BitCount":8,
       "Colour":0,
@@ -40,9 +30,20 @@
       "ID":1526920508,
       "Position":{
         "x":-7.625,
-        "y":2.625
+        "y":2.875
       },
       "BitCount":8,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"IN",
+      "ID":1909644365,
+      "Position":{
+        "x":-8.625,
+        "y":2.5
+      },
+      "BitCount":1,
       "Colour":0,
       "ValueDisplayMode":0
     }
@@ -53,7 +54,7 @@
       "ID":1043703455,
       "Position":{
         "x":-2.5,
-        "y":3.625
+        "y":3.75
       },
       "BitCount":8,
       "Colour":0,
@@ -64,34 +65,45 @@
       "ID":411510184,
       "Position":{
         "x":-2.5,
-        "y":2.75
+        "y":2.875
       },
       "BitCount":8,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"OUT",
+      "ID":1800712160,
+      "Position":{
+        "x":-1.5,
+        "y":2.5
+      },
+      "BitCount":1,
       "Colour":0,
       "ValueDisplayMode":0
     }
   ],
   "SubChips":[
     {
-      "Name":"8 bit 3 state",
+      "Name":"8-bit 3 state",
       "ID":953017168,
       "Label":"",
       "Position":{
         "x":-4.7775,
         "y":3.625
       },
-      "OutputPinColourInfo":[{"PinColour":0,"PinID":1643970242}],
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":1643970242},{"PinColour":0,"PinID":401943695}],
       "InternalData":null
     },
     {
-      "Name":"8 bit 3 state",
+      "Name":"8-bit 3 state",
       "ID":1642066143,
       "Label":"",
       "Position":{
         "x":-4.7775,
         "y":2.75
       },
-      "OutputPinColourInfo":[{"PinColour":0,"PinID":1643970242}],
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":1643970242},{"PinColour":0,"PinID":401943695}],
       "InternalData":null
     }
   ],
@@ -158,13 +170,13 @@
         "PinOwnerID":1909644365
       },
       "TargetPinAddress":{
-        "PinID":1112777666,
+        "PinID":1151704159,
         "PinOwnerID":953017168
       },
       "ConnectionType":0,
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+      "Points":[{"x":0.0,"y":0.0},{"x":-5.625,"y":2.5},{"x":-5.625,"y":3.375},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{
@@ -172,13 +184,27 @@
         "PinOwnerID":1909644365
       },
       "TargetPinAddress":{
-        "PinID":1112777666,
+        "PinID":1151704159,
         "PinOwnerID":1642066143
       },
       "ConnectionType":1,
       "ConnectedWireIndex":4,
       "ConnectedWireSegmentIndex":0,
-      "Points":[{"x":-5.625,"y":3.875},{"x":-5.625,"y":3.0},{"x":0.0,"y":0.0}]
+      "Points":[{"x":-5.625,"y":2.5},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":401943695,
+        "PinOwnerID":1642066143
+      },
+      "TargetPinAddress":{
+        "PinID":0,
+        "PinOwnerID":1800712160
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
     }
   ],
   "Displays": null

@@ -1,5 +1,6 @@
 {
-  "Name": "1 bit adder",
+  "DLSVersion": "2.1.6",
+  "Name": "1-bit adder",
   "NameLocation": 0,
   "ChipType": 0,
   "Size": {

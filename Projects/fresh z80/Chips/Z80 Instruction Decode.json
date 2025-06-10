@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "Z80 Instruction Decode",
   "NameLocation": 0,
   "ChipType": 0,
@@ -102,7 +103,7 @@
         "x":-8.1775,
         "y":1.625
       },
-      "OutputPinColourInfo":[{"PinColour":4,"PinID":1},{"PinColour":5,"PinID":2},{"PinColour":0,"PinID":3},{"PinColour":0,"PinID":4},{"PinColour":0,"PinID":5},{"PinColour":0,"PinID":6},{"PinColour":0,"PinID":7},{"PinColour":0,"PinID":8}],
+      "OutputPinColourInfo":[{"PinColour":5,"PinID":1},{"PinColour":6,"PinID":2},{"PinColour":0,"PinID":3},{"PinColour":0,"PinID":4},{"PinColour":0,"PinID":5},{"PinColour":0,"PinID":6},{"PinColour":0,"PinID":7},{"PinColour":0,"PinID":8}],
       "InternalData":null
     },
     {
@@ -113,7 +114,7 @@
         "x":-5.0525,
         "y":2.0
       },
-      "OutputPinColourInfo":[{"PinColour":3,"PinID":4}],
+      "OutputPinColourInfo":[{"PinColour":4,"PinID":4}],
       "InternalData":null
     },
     {
@@ -124,7 +125,7 @@
         "x":-6.5525,
         "y":1.125
       },
-      "OutputPinColourInfo":[{"PinColour":2,"PinID":4}],
+      "OutputPinColourInfo":[{"PinColour":3,"PinID":4}],
       "InternalData":null
     },
     {
@@ -146,7 +147,7 @@
         "x":-4.8275,
         "y":-0.375
       },
-      "OutputPinColourInfo":[{"PinColour":5,"PinID":1177405686}],
+      "OutputPinColourInfo":[{"PinColour":6,"PinID":1177405686}],
       "InternalData":null
     },
     {

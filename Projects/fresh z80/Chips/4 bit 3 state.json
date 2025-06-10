@@ -1,10 +1,11 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "4 bit 3 state",
   "NameLocation": 0,
   "ChipType": 0,
   "Size": {
     "x": 1.175,
-    "y": 0.75
+    "y": 0.625
   },
   "Colour": {
     "r": 0.417058349,
@@ -37,6 +38,17 @@
     }
   ],
   "OutputPins":[
+    {
+      "Name":"OUT",
+      "ID":70057425,
+      "Position":{
+        "x":-0.5,
+        "y":9.875
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
     {
       "Name":"OUT",
       "ID":1260180921,
@@ -313,7 +325,21 @@
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
       "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":1112777666
+      },
+      "TargetPinAddress":{
+        "PinID":0,
+        "PinOwnerID":70057425
+      },
+      "ConnectionType":1,
+      "ConnectedWireIndex":3,
+      "ConnectedWireSegmentIndex":0,
+      "Points":[{"x":-6.375,"y":9.875},{"x":0.0,"y":0.0}]
     }
   ],
-  "Displays": null
+  "Displays":[]
 }
