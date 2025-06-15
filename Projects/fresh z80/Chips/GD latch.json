@@ -1,5 +1,6 @@
 {
-  "Name": "D latch",
+  "DLSVersion": "2.1.6",
+  "Name": "GD latch",
   "NameLocation": 0,
   "ChipType": 0,
   "Size": {
@@ -17,7 +18,7 @@
       "Name":"D",
       "ID":145942653,
       "Position":{
-        "x":-5.125,
+        "x":-4.875,
         "y":1.0
       },
       "BitCount":1,
@@ -28,11 +29,11 @@
       "Name":"1CLK",
       "ID":1450370163,
       "Position":{
-        "x":-5.125,
+        "x":-4.875,
         "y":0.0
       },
       "BitCount":1,
-      "Colour":1,
+      "Colour":2,
       "ValueDisplayMode":0
     }
   ],
@@ -66,7 +67,7 @@
       "ID":153290195,
       "Label":"",
       "Position":{
-        "x":-2.75,
+        "x":-1.625,
         "y":0.875
       },
       "OutputPinColourInfo":[{"PinColour":0,"PinID":2}],
@@ -77,7 +78,7 @@
       "ID":447057541,
       "Label":"",
       "Position":{
-        "x":-2.75,
+        "x":-1.625,
         "y":-0.5
       },
       "OutputPinColourInfo":[{"PinColour":0,"PinID":2}],
@@ -103,6 +104,17 @@
         "y":-0.375
       },
       "OutputPinColourInfo":[{"PinColour":0,"PinID":2}],
+      "InternalData":null
+    },
+    {
+      "Name":"NOT",
+      "ID":1623729760,
+      "Label":"",
+      "Position":{
+        "x":-2.8275,
+        "y":-0.375
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":1177405686}],
       "InternalData":null
     }
   ],
@@ -133,7 +145,7 @@
       "ConnectionType":0,
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":-3.875,"y":0.0},{"x":-3.875,"y":0.75},{"x":0.0,"y":0.0}]
+      "Points":[{"x":0.0,"y":0.0},{"x":-3.75,"y":0.0},{"x":-3.75,"y":0.75},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{
@@ -147,21 +159,7 @@
       "ConnectionType":1,
       "ConnectedWireIndex":1,
       "ConnectedWireSegmentIndex":0,
-      "Points":[{"x":-3.90625,"y":0.0},{"x":-3.625,"y":0.0},{"x":-3.625,"y":-0.625},{"x":0.0,"y":0.0}]
-    },
-    {
-      "SourcePinAddress":{
-        "PinID":2,
-        "PinOwnerID":153290195
-      },
-      "TargetPinAddress":{
-        "PinID":0,
-        "PinOwnerID":447057541
-      },
-      "ConnectionType":0,
-      "ConnectedWireIndex":-1,
-      "ConnectedWireSegmentIndex":-1,
-      "Points":[{"x":0.0,"y":0.0},{"x":-1.875,"y":0.875},{"x":-1.875,"y":0.5},{"x":-3.5,"y":0.5},{"x":-3.5,"y":-0.375},{"x":0.0,"y":0.0}]
+      "Points":[{"x":-3.75,"y":0.0},{"x":-3.75,"y":-0.625},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{
@@ -172,10 +170,10 @@
         "PinID":0,
         "PinOwnerID":1533040185
       },
-      "ConnectionType":1,
-      "ConnectedWireIndex":3,
-      "ConnectedWireSegmentIndex":0,
-      "Points":[{"x":-1.875,"y":0.875},{"x":0.0,"y":0.0}]
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":-1.875,"y":0.875},{"x":0.0,"y":0.0}]
     },
     {
       "SourcePinAddress":{
@@ -229,7 +227,7 @@
         "PinOwnerID":920983491
       },
       "ConnectionType":1,
-      "ConnectedWireIndex":7,
+      "ConnectedWireIndex":6,
       "ConnectedWireSegmentIndex":0,
       "Points":[{"x":0.75,"y":0.75},{"x":0.0,"y":0.0}]
     },
@@ -243,9 +241,37 @@
         "PinOwnerID":444218674
       },
       "ConnectionType":1,
-      "ConnectedWireIndex":6,
+      "ConnectedWireIndex":5,
       "ConnectedWireSegmentIndex":0,
       "Points":[{"x":0.75,"y":-0.375},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":1177405686,
+        "PinOwnerID":1623729760
+      },
+      "TargetPinAddress":{
+        "PinID":0,
+        "PinOwnerID":447057541
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":145942653
+      },
+      "TargetPinAddress":{
+        "PinID":1579069796,
+        "PinOwnerID":1623729760
+      },
+      "ConnectionType":1,
+      "ConnectedWireIndex":0,
+      "ConnectedWireSegmentIndex":0,
+      "Points":[{"x":-3.375,"y":1.0},{"x":-3.375,"y":-0.375},{"x":0.0,"y":0.0}]
     }
   ],
   "Displays": null

@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to Unity",
+            "type": "vstuc",
+            "request": "attach"
+        }
+     ],
+     "env": {
+        "PATH": "${env:PATH}:/home/robert/.dotnet"
+     }
+}

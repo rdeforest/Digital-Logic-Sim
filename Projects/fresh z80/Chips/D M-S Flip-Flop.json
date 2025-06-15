@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "D M-S Flip-Flop",
   "NameLocation": 0,
   "ChipType": 0,
@@ -21,7 +22,7 @@
         "y":0.875
       },
       "BitCount":4,
-      "Colour":1,
+      "Colour":2,
       "ValueDisplayMode":0
     },
     {
@@ -51,7 +52,7 @@
   ],
   "SubChips":[
     {
-      "Name":"D latch",
+      "Name":"GD latch",
       "ID":65836056,
       "Label":"",
       "Position":{
@@ -62,7 +63,7 @@
       "InternalData":null
     },
     {
-      "Name":"D latch",
+      "Name":"GD latch",
       "ID":1934838039,
       "Label":"",
       "Position":{
@@ -102,7 +103,7 @@
         "x":-6.265,
         "y":0.875
       },
-      "OutputPinColourInfo":[{"PinColour":6,"PinID":828420079},{"PinColour":3,"PinID":232576052},{"PinColour":0,"PinID":1682929232},{"PinColour":2,"PinID":421515712},{"PinColour":0,"PinID":1131756023}],
+      "OutputPinColourInfo":[{"PinColour":7,"PinID":828420079},{"PinColour":4,"PinID":232576052},{"PinColour":0,"PinID":1682929232},{"PinColour":3,"PinID":421515712},{"PinColour":0,"PinID":1131756023}],
       "InternalData":null
     },
     {
@@ -113,7 +114,7 @@
         "x":-4.5775,
         "y":1.375
       },
-      "OutputPinColourInfo":[{"PinColour":4,"PinID":1177405686}],
+      "OutputPinColourInfo":[{"PinColour":5,"PinID":1177405686}],
       "InternalData":null
     },
     {
