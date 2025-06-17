@@ -3,15 +3,15 @@
   "DLSVersion_LastSaved": "2.1.6",
   "DLSVersion_EarliestCompatible": "2.0.0",
   "CreationTime": "2025-03-14T10:23:30.404-07:00",
-  "LastSaveTime": "2025-06-16T22:30:56.924-07:00",
+  "LastSaveTime": "2025-06-17T06:03:03.132-07:00",
   "Prefs_MainPinNamesDisplayMode": 2,
   "Prefs_ChipPinNamesDisplayMode": 1,
   "Prefs_GridDisplayMode": 1,
   "Prefs_Snapping": 1,
   "Prefs_StraightWires": 0,
   "Prefs_SimPaused": false,
-  "Prefs_SimTargetStepsPerSecond": 150,
-  "Prefs_SimStepsPerClockTick": 6,
+  "Prefs_SimTargetStepsPerSecond": 10000,
+  "Prefs_SimStepsPerClockTick": 100,
   "AllCustomChipNames":[
     "AND",
     "D-LATCH",
@@ -101,7 +101,7 @@
     },
     {
       "Chips":["7-SEGMENT","DECIMAL-4","DECIMAL-8","DOT DISPLAY","RGB DISPLAY","LED"],
-      "IsToggledOpen":false,
+      "IsToggledOpen":true,
       "Name":"DISPLAY"
     },
     {
@@ -121,11 +121,11 @@
     },
     {
       "Chips":["WIP2","RAM-sync"],
-      "IsToggledOpen":false,
+      "IsToggledOpen":true,
       "Name":"TEST"
     },
     {
-      "Chips":["PULSE","TEST MergeSplit","BUZZER","#","BuzzTest"],
+      "Chips":["PULSE","TEST MergeSplit","BUZZER","#","BuzzTest","foo"],
       "IsToggledOpen":true,
       "Name":"OTHER"
     }

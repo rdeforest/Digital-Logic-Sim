@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq; // For Array.Append and Array.Empty
@@ -30,7 +31,8 @@ namespace DLS.Simulation
 		// Modifications to the sim are made from the main thread, but only applied on the sim thread to avoid conflicts
 		static readonly ConcurrentQueue<SimModifyCommand> modificationQueue = new();
 
-		static SimChip[] dirtyChips = Array.Empty<SimChip>();
+		// Chips that need further processing this frame (i.e. have dirty pins)
+		static readonly System.Collections.Generic.Queue<SimChip> dirtyChips = new();
 
 		// ---- Simulation outline ----
 		// 1) Forward the initial player-controlled input states to all connected pins.
@@ -57,6 +59,7 @@ namespace DLS.Simulation
 			{
 				needsOrderPass = true;
 				prevRootSimChip = rootSimChip;
+				dirtyChips.Clear();
 			}
 
 			pcg_rngState = (uint)rng.Next();
@@ -89,29 +92,28 @@ namespace DLS.Simulation
 			}
 			else
 			{
-				if (dirtyChips.Length == 0)
+				if (dirtyChips.Count == 0)
 				{
 					// All signals are propagated, so we can start with the root chip
-					dirtyChips.Append(rootSimChip);
+					 dirtyChips.Enqueue(rootSimChip);
+					 System.Console.WriteLine(dirtyChips.ToString());
 				}
 
 				// Process dirty chips in the order they were added
-				ProcessDirtyChips();
+				ProcessOneDirtyChip();
 			}
 
 			UpdateAudioState();
 		}
 
-        private static void ProcessDirtyChips()
+        private static void ProcessOneDirtyChip()
         {
-			foreach (SimChip chip in dirtyChips) {
-				StepChip(chip);
+			SimChip chip = dirtyChips.Dequeue();
+			StepChip(chip);
 
-				if (!chip.IsDirty())
-				{
-					// If the chip is no longer dirty, remove it from the dirty list
-					dirtyChips = dirtyChips.Where(c => c != chip).ToArray();
-				}
+			if (chip.IsDirty() && !dirtyChips.Contains(chip))
+			{
+				dirtyChips.Enqueue(chip); // Still dirty, so add back to the end of the queue
 			}
         }
 
@@ -160,8 +162,9 @@ namespace DLS.Simulation
 
 				if (nextSubChip.IsBuiltin) {
 					ProcessBuiltinChip(nextSubChip); // We've reached a built-in chip, so process it directly
-				} else if (nextSubChip.IsDirty()) {
-					dirtyChips.Append(nextSubChip);
+					nextSubChip.Sim_PropagateOutputs();
+				} else if (nextSubChip.IsDirty() && !dirtyChips.Contains(nextSubChip)) {
+					dirtyChips.Enqueue(nextSubChip);
 				}
 
 			}
@@ -564,6 +567,8 @@ namespace DLS.Simulation
 					break;
 				}
 			}
+
+			if (chip.IsDirty()) dirtyChips.Append(chip);
 		}
 
 		public static SimChip BuildSimChip(ChipDescription chipDesc, ChipLibrary library)
@@ -719,7 +724,7 @@ namespace DLS.Simulation
 			modificationQueue?.Clear();
 			stopwatch.Restart();
 			elapsedSecondsOld = 0;
-			dirtyChips = Array.Empty<SimChip>();
+			dirtyChips?.Clear();
 		}
 
 		struct SimModifyCommand
