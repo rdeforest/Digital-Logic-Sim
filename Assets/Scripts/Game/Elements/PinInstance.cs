@@ -16,12 +16,47 @@ namespace DLS.Game
 
 		// Pin may be attached to a chip or a devPin as its parent
 		public readonly IMoveable parent;
-		public uint State; // sim state
+		private uint _state; // sim state
 		public uint PlayerInputState; // dev input pins only
 		public PinColour Colour;
 		bool faceRight;
 		public float LocalPosY;
 		public string Name;
+
+		// Track if the pin state has changed (is "dirty")
+		public bool IsDirty { get; private set; }
+
+		// Property to access the state with change tracking
+		public uint State
+		{
+			get => _state;
+			set
+			{
+				if (_state != value)
+				{
+					_state = value;
+					IsDirty = true;
+				}
+			}
+		}
+
+		// Method to clear the dirty flag (typically called after propagating changes)
+		public void ClearDirtyFlag()
+		{
+			IsDirty = false;
+		}
+
+		// Method to set state without marking as dirty (for internal initialization)
+		internal void SetStateInternal(uint value)
+		{
+			_state = value;
+		}
+
+		// Method to allow PinState.SetAllDisconnected to work with the private field
+		internal void SetAllDisconnected()
+		{
+			PinState.SetAllDisconnected(ref _state);
+		}
 
 
 		public PinInstance(PinDescription desc, PinAddress address, IMoveable parent, bool isSourcePin)
@@ -35,7 +70,8 @@ namespace DLS.Game
 
 			IsBusPin = parent is SubChipInstance subchip && subchip.IsBus;
 			faceRight = isSourcePin;
-			PinState.SetAllDisconnected(ref State);
+			PinState.SetAllDisconnected(ref _state);
+			IsDirty = false; // Initialize as clean
 		}
 
 		public Vector2 ForwardDir => faceRight ? Vector2.right : Vector2.left;

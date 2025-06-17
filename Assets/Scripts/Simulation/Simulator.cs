@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using DLS.Description;
 using DLS.Game;
@@ -30,25 +29,6 @@ namespace DLS.Simulation
 		// Modifications to the sim are made from the main thread, but only applied on the sim thread to avoid conflicts
 		static readonly ConcurrentQueue<SimModifyCommand> modificationQueue = new();
 
-		// Add as a field in the Simulator class
-		static readonly HashSet<SimPin> dirtyPins = new HashSet<SimPin>();
-		static readonly Dictionary<SimPin, int> dirtyPinFrames = new Dictionary<SimPin, int>();
-
-		// Method to mark a node as dirty
-		public static void MarkPinDirty(SimPin pin)
-		{
-			if (pin != null && (!dirtyPinFrames.ContainsKey(pin) || dirtyPinFrames[pin] != simulationFrame)) {
-				dirtyPins.Add(pin);
-				dirtyPinFrames[pin] = simulationFrame;
-			}
-		}
-
-		// Method to clear dirty status after evaluation
-		static void ClearDirtyStatus(SimPin pin)
-		{
-			dirtyPins.Remove(pin);
-		}
-
 		// ---- Simulation outline ----
 		// 1) Forward the initial player-controlled input states to all connected pins.
 		// 2) Loop over all subchips not yet processed this frame, and process them if they are ready (i.e. all input pins have received all their inputs)
@@ -70,40 +50,44 @@ namespace DLS.Simulation
 			Simulator.audioState = audioState;
 			audioState.InitFrame();
 
+			if (rootSimChip != prevRootSimChip)
+			{
+				needsOrderPass = true;
+				prevRootSimChip = rootSimChip;
+			}
+
 			pcg_rngState = (uint)rng.Next();
 			canDynamicReorderThisFrame = simulationFrame % 100 == 0;
 			simulationFrame++; //
 
-			DirtyChangedInputs(rootSimChip, inputPins);
-
-			ProcessDirtyPins();
-
-			UpdateAudioState();
-		}
-
-		static void ProcessDirtyPins() {
-
-
-		}
-
-		static void DirtyChangedInputs(SimChip rootSimChip, DevPinInstance[] inputPins) {
+			// Step 1) Get player-controlled input states and copy values to the sim
 			foreach (DevPinInstance input in inputPins)
 			{
 				try
 				{
 					SimPin simPin = rootSimChip.GetSimPinFromAddress(input.Pin.Address);
-					uint newState = input.Pin.PlayerInputState;
+					PinState.Set(ref simPin.State, input.Pin.PlayerInputState);
 
-					if (simPin.State != newState) {
-						MarkPinDirty(simPin);
-						simPin.State = newState;
-					}
+					input.Pin.State = input.Pin.PlayerInputState;
 				}
 				catch (Exception)
 				{
 					// Possible for sim to be temporarily out of sync since running on separate threads, so just ignore failure to find pin.
 				}
 			}
+
+			// Process
+			if (needsOrderPass)
+			{
+				StepChipReorder(rootSimChip);
+				needsOrderPass = false;
+			}
+			else
+			{
+				StepChip(rootSimChip);
+			}
+
+			UpdateAudioState();
 		}
 
 		public static void UpdateInPausedState()
