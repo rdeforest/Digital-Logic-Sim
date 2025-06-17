@@ -7,7 +7,21 @@ namespace DLS.Simulation
 		public readonly int ID;
 		public readonly SimChip parentChip;
 		public readonly bool isInput;
-		public uint State;
+		private uint _state;
+		public bool isDirty;
+
+		  public uint State
+		{
+			get => _state;
+			set
+			{
+				if (_state != value)
+				{
+					_state = value;
+					isDirty = true;
+				}
+			}
+		}
 
 		public SimPin[] ConnectedTargetPins = Array.Empty<SimPin>();
 
@@ -31,18 +45,21 @@ namespace DLS.Simulation
 			latestSourceID = -1;
 			latestSourceParentChipID = -1;
 
-			PinState.SetAllDisconnected(ref State);
+			uint tmpState = State;
+			PinState.SetAllDisconnected(ref tmpState);
+			State = tmpState;
 		}
 
 		public bool FirstBitHigh => PinState.FirstBitHigh(State);
 
 		public void PropagateSignal()
 		{
-			int length = ConnectedTargetPins.Length;
-			for (int i = 0; i < length; i++)
+			foreach (SimPin targetPin in ConnectedTargetPins)
 			{
-				ConnectedTargetPins[i].ReceiveInput(this);
+				targetPin.ReceiveInput(this);
 			}
+
+			isDirty = false; // Reset dirty flag after propagating the signal
 		}
 
 		// Called on sub-chip input pins, or chip dev-pins

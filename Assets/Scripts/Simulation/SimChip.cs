@@ -90,27 +90,25 @@ namespace DLS.Simulation
 
 		public void Sim_PropagateInputs()
 		{
-			int length = InputPins.Length;
-
-			for (int i = 0; i < length; i++)
-			{
-				InputPins[i].PropagateSignal();
-			}
+			Sim_PropagatePins(InputPins);
 		}
 
 		public void Sim_PropagateOutputs()
-		{
-			int length = OutputPins.Length;
+        {
+            Sim_PropagatePins(OutputPins);
+            numInputsReady = 0; // Reset for next frame
+        }
 
-			for (int i = 0; i < length; i++)
-			{
-				OutputPins[i].PropagateSignal();
-			}
+        private void Sim_PropagatePins(SimPin[] pins)
+        {
+            foreach (SimPin pin in pins)
+            {
+				if (pin.isDirty)
+					pin.PropagateSignal();
+            }
+        }
 
-			numInputsReady = 0; // Reset for next frame
-		}
-
-		public bool Sim_IsReady() => numInputsReady == numConnectedInputs;
+        public bool Sim_IsReady() => numInputsReady == numConnectedInputs;
 		
 		public (bool success, SimChip chip) TryGetSubChipFromID(int id)
 		{
@@ -270,7 +268,9 @@ namespace DLS.Simulation
 					removeTargetPin.numInputConnections -= 1;
 					if (removeTargetPin.numInputConnections == 0)
 					{
-						PinState.SetAllDisconnected(ref removeTargetPin.State);
+						uint removeTargetPinState = removeTargetPin.State;
+						PinState.SetAllDisconnected(ref removeTargetPinState);
+						removeTargetPin.State = removeTargetPinState;
 						removeTargetPin.latestSourceID = -1;
 						removeTargetPin.latestSourceParentChipID = -1;
 						if (targetChip != null) removeTargetPin.parentChip.numConnectedInputs--;
@@ -280,5 +280,12 @@ namespace DLS.Simulation
 				}
 			}
 		}
-	}
+
+        internal bool IsDirty()
+        {
+			return InputPins .Any(pin     => pin.isDirty) ||
+			       OutputPins.Any(pin     => pin.isDirty) ||
+			       SubChips  .Any(subChip => subChip.IsDirty());
+        }
+    }
 }

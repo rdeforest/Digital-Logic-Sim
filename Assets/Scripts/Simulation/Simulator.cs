@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Linq; // For Array.Append and Array.Empty
 using DLS.Description;
 using DLS.Game;
 using Random = System.Random;
@@ -28,6 +29,8 @@ namespace DLS.Simulation
 
 		// Modifications to the sim are made from the main thread, but only applied on the sim thread to avoid conflicts
 		static readonly ConcurrentQueue<SimModifyCommand> modificationQueue = new();
+
+		static SimChip[] dirtyChips = Array.Empty<SimChip>();
 
 		// ---- Simulation outline ----
 		// 1) Forward the initial player-controlled input states to all connected pins.
@@ -66,7 +69,9 @@ namespace DLS.Simulation
 				try
 				{
 					SimPin simPin = rootSimChip.GetSimPinFromAddress(input.Pin.Address);
-					PinState.Set(ref simPin.State, input.Pin.PlayerInputState);
+					uint simPinState = simPin.State;
+					PinState.Set(ref simPinState, input.Pin.PlayerInputState);
+					simPin.State = simPinState;
 
 					input.Pin.State = input.Pin.PlayerInputState;
 				}
@@ -84,13 +89,33 @@ namespace DLS.Simulation
 			}
 			else
 			{
-				StepChip(rootSimChip);
+				if (dirtyChips.Length == 0)
+				{
+					// All signals are propagated, so we can start with the root chip
+					dirtyChips.Append(rootSimChip);
+				}
+
+				// Process dirty chips in the order they were added
+				ProcessDirtyChips();
 			}
 
 			UpdateAudioState();
 		}
 
-		public static void UpdateInPausedState()
+        private static void ProcessDirtyChips()
+        {
+			foreach (SimChip chip in dirtyChips) {
+				StepChip(chip);
+
+				if (!chip.IsDirty())
+				{
+					// If the chip is no longer dirty, remove it from the dirty list
+					dirtyChips = dirtyChips.Where(c => c != chip).ToArray();
+				}
+			}
+        }
+
+        public static void UpdateInPausedState()
 		{
 			if (audioState != null)
 			{
@@ -108,7 +133,7 @@ namespace DLS.Simulation
 			audioState.NotifyAllNotesRegistered(deltaTime);
 		}
 
-		// Recursively propagate signals through this chip and its subchips
+		// Propagate signals through this chip to its subchips, adding chips needing further processing to the dirtyChips list
 		static void StepChip(SimChip chip)
 		{
 			// Propagate signal from all input dev-pins to all their connected pins
@@ -133,12 +158,15 @@ namespace DLS.Simulation
 					}
 				}
 
-				if (nextSubChip.IsBuiltin) ProcessBuiltinChip(nextSubChip); // We've reached a built-in chip, so process it directly
-				else StepChip(nextSubChip); // Recursively process custom chip
+				if (nextSubChip.IsBuiltin) {
+					ProcessBuiltinChip(nextSubChip); // We've reached a built-in chip, so process it directly
+				} else if (nextSubChip.IsDirty()) {
+					dirtyChips.Append(nextSubChip);
+				}
 
-				// Step 3) Forward the outputs of the processed subchip to connected pins
-				nextSubChip.Sim_PropagateOutputs();
 			}
+
+			chip.Sim_PropagateOutputs();
 		}
 
 		// Recursively propagate signals through this chip and its subchips
@@ -237,7 +265,9 @@ namespace DLS.Simulation
 				case ChipType.Clock:
 				{
 					bool high = stepsPerClockTransition != 0 && ((simulationFrame / stepsPerClockTransition) & 1) == 0;
-					PinState.Set(ref chip.OutputPins[0].State, high ? PinState.LogicHigh : PinState.LogicLow);
+					uint pinState = chip.OutputPins[0].State;
+					PinState.Set(ref pinState, high ? PinState.LogicHigh : PinState.LogicLow);
+					chip.OutputPins[0].State = pinState;
 					break;
 				}
 				case ChipType.Pulse:
@@ -312,7 +342,10 @@ namespace DLS.Simulation
 					SimPin in4A = chip.InputPins[0];
 					SimPin in4B = chip.InputPins[1];
 					SimPin out8 = chip.OutputPins[0];
-					PinState.Set8BitFrom4BitSources(ref out8.State, in4B.State, in4A.State);
+
+					uint out8State = out8.State;
+					PinState.Set8BitFrom4BitSources(ref out8State, in4B.State, in4A.State);
+					out8.State = out8State;
 					break;
 				}
 				case ChipType.Split_8To4Bit:
@@ -320,8 +353,13 @@ namespace DLS.Simulation
 					SimPin in8 = chip.InputPins[0];
 					SimPin out4A = chip.OutputPins[0];
 					SimPin out4B = chip.OutputPins[1];
-					PinState.Set4BitFrom8BitSource(ref out4A.State, in8.State, false);
-					PinState.Set4BitFrom8BitSource(ref out4B.State, in8.State, true);
+
+					uint out4AState = out4A.State;
+					uint out4BState = out4B.State;
+					PinState.Set4BitFrom8BitSource(ref out4AState, in8.State, false);
+					PinState.Set4BitFrom8BitSource(ref out4BState, in8.State, true);
+					out4A.State = out4AState;
+					out4B.State = out4BState;
 					break;
 				}
 				case ChipType.Split_8To1Bit:
@@ -343,8 +381,13 @@ namespace DLS.Simulation
 					SimPin enablePin = chip.InputPins[1];
 					SimPin outputPin = chip.OutputPins[0];
 
-					if (PinState.FirstBitHigh(enablePin.State)) outputPin.State = dataPin.State;
-					else PinState.SetAllDisconnected(ref outputPin.State);
+					if (PinState.FirstBitHigh(enablePin.State)) {
+						outputPin.State = dataPin.State;
+					} else {
+						uint outputPinState = outputPin.State;
+						PinState.SetAllDisconnected(ref outputPinState);
+						outputPin.State = outputPinState;
+					}
 
 					break;
 				}
@@ -512,7 +555,10 @@ namespace DLS.Simulation
 					if (ChipTypeHelper.IsBusOriginType(chip.ChipType))
 					{
 						SimPin inputPin = chip.InputPins[0];
-						PinState.Set(ref chip.OutputPins[0].State, inputPin.State);
+
+						uint outputPinState = chip.OutputPins[0].State;
+						PinState.Set(ref outputPinState, inputPin.State);
+						chip.OutputPins[0].State = outputPinState;
 					}
 
 					break;
@@ -653,7 +699,7 @@ namespace DLS.Simulation
 					}
 					else if (cmd.type == SimModifyCommand.ModificationType.RemoveConnection)
 					{
-						cmd.modifyTarget.RemoveConnection(cmd.sourcePinAddress, cmd.targetPinAddress); //
+						cmd.modifyTarget.RemoveConnection(cmd.sourcePinAddress, cmd.targetPinAddress);
 					}
 					else if (cmd.type == SimModifyCommand.ModificationType.AddPin)
 					{
@@ -673,6 +719,7 @@ namespace DLS.Simulation
 			modificationQueue?.Clear();
 			stopwatch.Restart();
 			elapsedSecondsOld = 0;
+			dirtyChips = Array.Empty<SimChip>();
 		}
 
 		struct SimModifyCommand
