@@ -12,7 +12,6 @@ namespace DLS.Simulation
 		// Some builtin chips, such as RAM, require an internal state for memory
 		// (can also be used for other arbitrary chip-specific data)
 		public readonly uint[] InternalState = Array.Empty<uint>();
-		public readonly bool IsBuiltin;
 		public SimPin[] InputPins = Array.Empty<SimPin>();
 		public int numConnectedInputs;
 
@@ -31,7 +30,6 @@ namespace DLS.Simulation
 			SubChips = subChips;
 			ID = id;
 			ChipType = desc.ChipType;
-			IsBuiltin = ChipType != ChipType.Custom;
 
 			// ---- Create pins (don't allocate unnecessarily as very many sim chips maybe created!) ----
 			if (desc.InputPins.Length > 0)
@@ -103,8 +101,7 @@ namespace DLS.Simulation
         {
             foreach (SimPin pin in pins)
             {
-				if (pin.isDirty)
-					pin.PropagateSignal();
+				pin.PropagateSignal();
             }
         }
 
@@ -281,11 +278,100 @@ namespace DLS.Simulation
 			}
 		}
 
-        internal bool IsDirty()
+
+        /// <summary>
+        /// Process this chip for one simulation step using the appropriate processor
+        /// </summary>
+        public void StepChip()
         {
-			return InputPins .Any(pin     => pin.isDirty) ||
-			       OutputPins.Any(pin     => pin.isDirty) ||
-			       SubChips  .Any(subChip => subChip.IsDirty());
+            // Get the processor for this chip type and process it
+            var processor = DLS.Simulation.ChipProcessors.ChipProcessorFactory.GetProcessor(ChipType);
+            if (processor != null)
+            {
+                processor.StepChip(this);
+            }
+            else
+            {
+                // Fallback for chips without processors - this should be rare now
+                // since we have processors for all major chip types including Custom
+                throw new System.Exception($"No processor found for chip type: {ChipType}");
+            }
+        }
+
+        /// <summary>
+        /// Process this chip and its subchips with reordering to determine optimal processing order.
+        /// This is used during the initial ordering pass when the simulation is first built or modified.
+        /// </summary>
+        public void StepChipReorder()
+        {
+            Sim_PropagateInputs();
+
+            SimChip[] subChips = SubChips;
+            int numRemaining = subChips.Length;
+
+            while (numRemaining > 0)
+            {
+                int nextSubChipIndex = ChooseNextSubChip(subChips, numRemaining);
+                SimChip nextSubChip = subChips[nextSubChipIndex];
+
+                // "Remove" the chosen subchip from remaining sub chips.
+                // This is done by moving it to the end of the array and reducing the length of the span by one.
+                // This also places the subchip into (reverse) order, so that the traversal order need to be determined again on the next pass.
+                (subChips[nextSubChipIndex], subChips[numRemaining - 1]) = (subChips[numRemaining - 1], subChips[nextSubChipIndex]);
+                numRemaining--;
+
+                // Process chosen subchip using the new system
+                nextSubChip.StepChip();
+
+                // Step 3) Forward the outputs of the processed subchip to connected pins
+                nextSubChip.Sim_PropagateOutputs();
+            }
+        }
+
+        /// <summary>
+        /// Choose the next subchip to process during reordering.
+        /// Prefers chips that are "ready" (all inputs received), otherwise picks randomly.
+        /// </summary>
+        /// <param name="subChips">Array of subchips to choose from</param>
+        /// <param name="num">Number of remaining unprocessed chips</param>
+        /// <returns>Index of the chosen subchip</returns>
+        private int ChooseNextSubChip(SimChip[] subChips, int num)
+        {
+            bool noSubChipsReady = true;
+            bool isNonBusChipRemaining = false;
+            int nextSubChipIndex = -1;
+
+            // Step 2) Loop over all subchips not yet processed this frame, and process them if they are ready
+            for (int i = 0; i < num; i++)
+            {
+                SimChip subChip = subChips[i];
+                if (subChip.Sim_IsReady())
+                {
+                    noSubChipsReady = false;
+                    nextSubChipIndex = i;
+                    break;
+                }
+
+                isNonBusChipRemaining |= !ChipTypeHelper.IsBusOriginType(subChip.ChipType);
+            }
+
+            // Step 4) if no sub chip is ready to be processed, pick one at random (but save buses for last)
+            if (noSubChipsReady)
+            {
+                nextSubChipIndex = Simulator.rng.Next(0, num);
+
+                // If processing in random order, save buses for last (since we must know all their inputs to display correctly)
+                if (isNonBusChipRemaining)
+                {
+                    for (int i = 0; i < num; i++)
+                    {
+                        if (!ChipTypeHelper.IsBusOriginType(subChips[nextSubChipIndex].ChipType)) break;
+                        nextSubChipIndex = (nextSubChipIndex + 1) % num;
+                    }
+                }
+            }
+
+            return nextSubChipIndex;
         }
     }
 }

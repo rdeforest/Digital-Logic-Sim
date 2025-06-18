@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 
 namespace DLS.Simulation
 {
@@ -7,10 +8,9 @@ namespace DLS.Simulation
 		public readonly int ID;
 		public readonly SimChip parentChip;
 		public readonly bool isInput;
+		
 		private uint _state;
-		public bool isDirty;
-
-		  public uint State
+		public uint State
 		{
 			get => _state;
 			set
@@ -18,7 +18,7 @@ namespace DLS.Simulation
 				if (_state != value)
 				{
 					_state = value;
-					isDirty = true;
+					Simulator.AddDirtyChip(parentChip);
 				}
 			}
 		}
@@ -58,55 +58,79 @@ namespace DLS.Simulation
 			{
 				targetPin.ReceiveInput(this);
 			}
-
-			isDirty = false; // Reset dirty flag after propagating the signal
 		}
 
 		// Called on sub-chip input pins, or chip dev-pins
 		void ReceiveInput(SimPin source)
 		{
-			// If this is the first input of the frame, reset the received inputs counter to zero
+			InitializeFrameIfNeeded();
+			
+			var set = ResolveInputState(source);
+			
+			HandleStateChange(source, set);
+			
+			numInputsReceivedThisFrame++;
+			NotifyChipIfReady();
+		}
+
+		private void InitializeFrameIfNeeded()
+		{
 			if (lastUpdatedFrameIndex != Simulator.simulationFrame)
 			{
 				lastUpdatedFrameIndex = Simulator.simulationFrame;
 				numInputsReceivedThisFrame = 0;
 			}
+		}
 
-			bool set;
-
+		private bool ResolveInputState(SimPin source)
+		{
 			if (numInputsReceivedThisFrame > 0)
 			{
-				// Has already received input this frame, so choose at random whether to accept conflicting input.
-				// Note: for multi-bit pins, this choice is made identically for all bits, rather than individually.
-				// Todo: maybe consider changing to per-bit in the future...)
-
-				uint OR = source.State | State;
-				uint AND = source.State & State;
-				ushort bitsNew = (ushort)(Simulator.RandomBool() ? OR : AND); // randomly accept or reject conflicting state
-
-				ushort mask = (ushort)(OR >> 16); // tristate flags
-				bitsNew = (ushort)((bitsNew & ~mask) | ((ushort)OR & mask)); // can always accept input for tristated bits
-
-				ushort tristateNew = (ushort)(AND >> 16);
-				uint stateNew = (uint)(bitsNew | (tristateNew << 16));
-				set = stateNew != State;
-				State = stateNew;
+				return ResolveConflictingInput(source);
 			}
 			else
 			{
-				// First input source this frame, so accept it.
-				State = source.State;
-				set = true;
+				return AcceptFirstInput(source);
 			}
+		}
 
+		private bool ResolveConflictingInput(SimPin source)
+		{
+			// Has already received input this frame, so choose at random whether to accept conflicting input.
+			// Note: for multi-bit pins, this choice is made identically for all bits, rather than individually.
+			uint OR = source.State | State;
+			uint AND = source.State & State;
+			ushort bitsNew = (ushort)(Simulator.RandomBool() ? OR : AND); // randomly accept or reject conflicting state
+
+			ushort mask = (ushort)(OR >> 16); // tristate flags
+			bitsNew = (ushort)((bitsNew & ~mask) | ((ushort)OR & mask)); // can always accept input for tristated bits
+
+			ushort tristateNew = (ushort)(AND >> 16);
+			uint stateNew = (uint)(bitsNew | (tristateNew << 16));
+			bool changed = stateNew != State;
+			State = stateNew;
+			return changed;
+		}
+
+		private bool AcceptFirstInput(SimPin source)
+		{
+			// First input source this frame, so accept it.
+			bool changed = State != source.State;
+			State = source.State;
+			return changed;
+		}
+
+		private void HandleStateChange(SimPin source, bool set)
+		{
 			if (set)
 			{
 				latestSourceID = source.ID;
 				latestSourceParentChipID = source.parentChip.ID;
 			}
+		}
 
-			numInputsReceivedThisFrame++;
-
+		private void NotifyChipIfReady()
+		{
 			// If this is a sub-chip input pin, and has received all of its connections, notify the sub-chip that the input is ready
 			if (isInput && numInputsReceivedThisFrame == numInputConnections)
 			{

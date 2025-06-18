@@ -497,82 +497,90 @@ namespace DLS.Game
 
 			while (simThreadActive)
 			{
-				Simulator.ApplyModifications();
-				// ---- A new frame has been reached on main thread  ----
-				if (mainThreadFrameCount > simLastMainThreadSyncFrame)
+				try
 				{
-					simLastMainThreadSyncFrame = mainThreadFrameCount;
-					// Update graphical state from sim
-					// Note: update graphical state even when paused so that subchips are automatically if viewed
-					ViewedChip.UpdateStateFromSim(ViewedSimChip, !CanEditViewedChip);
-
-					// Log sim time
-					if (debug_logSimTime)
+					Simulator.ApplyModifications();
+					// ---- A new frame has been reached on main thread  ----
+					if (mainThreadFrameCount > simLastMainThreadSyncFrame)
 					{
-						double elapsedMs = stopwatchTotal.ElapsedTicks * (1000.0 / Stopwatch.Frequency);
-						int frame = Simulator.simulationFrame;
-						if (frame > 0) UnityEngine.Debug.Log($"Avg sim step time: {elapsedMs / frame} ms NumSteps: {frame} secs: {elapsedMs / 1000.0:0.00}");
+						simLastMainThreadSyncFrame = mainThreadFrameCount;
+						// Update graphical state from sim
+						// Note: update graphical state even when paused so that subchips are automatically if viewed
+						ViewedChip.UpdateStateFromSim(ViewedSimChip, !CanEditViewedChip);
+
+						// Log sim time
+						if (debug_logSimTime)
+						{
+							double elapsedMs = stopwatchTotal.ElapsedTicks * (1000.0 / Stopwatch.Frequency);
+							int frame = Simulator.simulationFrame;
+							if (frame > 0) UnityEngine.Debug.Log($"Avg sim step time: {elapsedMs / frame} ms NumSteps: {frame} secs: {elapsedMs / 1000.0:0.00}");
+						}
+					}
+
+					// If sim is paused, sleep a bit and then check again
+					// Also handle advancing a single step
+					if (simPaused && !advanceSingleSimStep)
+					{
+						Simulator.UpdateInPausedState();
+						stopwatchTotal.Stop();
+						Thread.Sleep(10);
+						continue;
+					}
+
+					if (advanceSingleSimStep)
+					{
+						simPausedSingleStepCounter++;
+						advanceSingleSimStep = false;
+					}
+					else simPausedSingleStepCounter = 0;
+
+					double targetTickDurationMs = 1000.0 / targetTicksPerSecond;
+					stopwatch.Restart();
+					if (!stopwatchTotal.IsRunning) stopwatchTotal.Start();
+
+					// ---- Run sim ----
+					Simulator.stepsPerClockTransition = stepsPerClockTransition;
+					SimChip simChip = rootSimChip;
+					if (simChip == null) continue; // Could potentially be null for a frame when switching between chips
+					Simulator.RunSimulationStep(simChip, inputPins, audioState.simAudio);
+
+					// ---- Wait some amount of time (if needed) to try to hit the target ticks per second ----
+					while (true)
+					{
+						double elapsedMs = stopwatch.ElapsedTicks * (1000.0 / Stopwatch.Frequency);
+						double waitMs = targetTickDurationMs - elapsedMs;
+
+						if (waitMs <= 0) break;
+
+						// Wait some cycles before checking timer again (todo: better approach?)
+						Thread.SpinWait(10);
+					}
+
+					// ---- Update perf counter (measures average num ticks over last n seconds) ----
+					long elapsedMsTotal = stopwatchTotal.ElapsedMilliseconds;
+					tickCounterOverTimeWindow.Enqueue(elapsedMsTotal);
+					while (tickCounterOverTimeWindow.Count > 0)
+					{
+						if (elapsedMsTotal - tickCounterOverTimeWindow.Peek() > performanceTimeWindowMs)
+						{
+							tickCounterOverTimeWindow.Dequeue();
+						}
+						else break;
+					}
+
+					if (tickCounterOverTimeWindow.Count > 0)
+					{
+						double activeWindowMs = elapsedMsTotal - tickCounterOverTimeWindow.Peek();
+						if (activeWindowMs > 0)
+						{
+							simAvgTicksPerSec = tickCounterOverTimeWindow.Count / activeWindowMs * 1000;
+						}
 					}
 				}
-
-				// If sim is paused, sleep a bit and then check again
-				// Also handle advancing a single step
-				if (simPaused && !advanceSingleSimStep)
+				catch (Exception ex)
 				{
-					Simulator.UpdateInPausedState();
-					stopwatchTotal.Stop();
-					Thread.Sleep(10);
-					continue;
-				}
-
-				if (advanceSingleSimStep)
-				{
-					simPausedSingleStepCounter++;
-					advanceSingleSimStep = false;
-				}
-				else simPausedSingleStepCounter = 0;
-
-				double targetTickDurationMs = 1000.0 / targetTicksPerSecond;
-				stopwatch.Restart();
-				if (!stopwatchTotal.IsRunning) stopwatchTotal.Start();
-
-				// ---- Run sim ----
-				Simulator.stepsPerClockTransition = stepsPerClockTransition;
-				SimChip simChip = rootSimChip;
-				if (simChip == null) continue; // Could potentially be null for a frame when switching between chips
-				Simulator.RunSimulationStep(simChip, inputPins, audioState.simAudio);
-
-				// ---- Wait some amount of time (if needed) to try to hit the target ticks per second ----
-				while (true)
-				{
-					double elapsedMs = stopwatch.ElapsedTicks * (1000.0 / Stopwatch.Frequency);
-					double waitMs = targetTickDurationMs - elapsedMs;
-
-					if (waitMs <= 0) break;
-
-					// Wait some cycles before checking timer again (todo: better approach?)
-					Thread.SpinWait(10);
-				}
-
-				// ---- Update perf counter (measures average num ticks over last n seconds) ----
-				long elapsedMsTotal = stopwatchTotal.ElapsedMilliseconds;
-				tickCounterOverTimeWindow.Enqueue(elapsedMsTotal);
-				while (tickCounterOverTimeWindow.Count > 0)
-				{
-					if (elapsedMsTotal - tickCounterOverTimeWindow.Peek() > performanceTimeWindowMs)
-					{
-						tickCounterOverTimeWindow.Dequeue();
-					}
-					else break;
-				}
-
-				if (tickCounterOverTimeWindow.Count > 0)
-				{
-					double activeWindowMs = elapsedMsTotal - tickCounterOverTimeWindow.Peek();
-					if (activeWindowMs > 0)
-					{
-						simAvgTicksPerSec = tickCounterOverTimeWindow.Count / activeWindowMs * 1000;
-					}
+					Debug.LogError($"SimThread exception: {ex}");
+					// simThreadActive = false;
 				}
 			}
 		}
