@@ -1,4 +1,5 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "D flip-flop (broken)",
   "NameLocation": 0,
   "ChipType": 0,
@@ -32,7 +33,7 @@
         "y":1.25
       },
       "BitCount":4,
-      "Colour":1,
+      "Colour":2,
       "ValueDisplayMode":0
     }
   ],
@@ -115,6 +116,34 @@
       "ConnectedWireIndex":-1,
       "ConnectedWireSegmentIndex":-1,
       "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":2042325217
+      },
+      "TargetPinAddress":{
+        "PinID":403191520,
+        "PinOwnerID":594723470
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":-3.75,"y":1.25},{"x":-3.75,"y":1.4375},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":2042325217
+      },
+      "TargetPinAddress":{
+        "PinID":403191520,
+        "PinOwnerID":1445538571
+      },
+      "ConnectionType":1,
+      "ConnectedWireIndex":3,
+      "ConnectedWireSegmentIndex":0,
+      "Points":[{"x":-5.00124,"y":1.25},{"x":-5.0,"y":1.0},{"x":0.5,"y":1.0},{"x":0.5,"y":1.4375},{"x":0.0,"y":0.0}]
     }
   ],
   "Displays": null

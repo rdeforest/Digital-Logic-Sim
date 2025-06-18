@@ -3,7 +3,7 @@
   "DLSVersion_LastSaved": "2.1.6",
   "DLSVersion_EarliestCompatible": "2.0.0",
   "CreationTime": "2025-06-16T22:16:28.020-07:00",
-  "LastSaveTime": "2025-06-16T22:21:13.317-07:00",
+  "LastSaveTime": "2025-06-17T21:13:36.600-07:00",
   "Prefs_MainPinNamesDisplayMode": 2,
   "Prefs_ChipPinNamesDisplayMode": 1,
   "Prefs_GridDisplayMode": 1,
@@ -24,30 +24,22 @@
       "IsCollection":true
     },
     {
-      "Name":"NAND",
+      "Name":"Gates",
+      "IsCollection":true
+    },
+    {
+      "Name":"3-STATE BUFFER",
       "IsCollection":false
     },
     {
-      "Name":"NOT",
-      "IsCollection":false
-    },
-    {
-      "Name":"AND",
-      "IsCollection":false
-    },
-    {
-      "Name":"OR",
-      "IsCollection":false
-    },
-    {
-      "Name":"XOR",
-      "IsCollection":false
+      "Name":"MERGE/SPLIT",
+      "IsCollection":true
     }
   ],
   "ChipCollections":[
     {
-      "Chips":["NAND","CLOCK","PULSE","KEY","3-STATE BUFFER"],
-      "IsToggledOpen":false,
+      "Chips":["CLOCK","PULSE","KEY","3-STATE BUFFER"],
+      "IsToggledOpen":true,
       "Name":"BASIC"
     },
     {
@@ -57,7 +49,7 @@
     },
     {
       "Chips":["1-4BIT","1-8BIT","4-8BIT","4-1BIT","8-4BIT","8-1BIT"],
-      "IsToggledOpen":false,
+      "IsToggledOpen":true,
       "Name":"MERGE/SPLIT"
     },
     {
@@ -74,6 +66,16 @@
       "Chips":["ROM 256×16"],
       "IsToggledOpen":false,
       "Name":"MEMORY"
+    },
+    {
+      "Chips":["BUZZER"],
+      "IsToggledOpen":true,
+      "Name":"OTHER"
+    },
+    {
+      "Chips":["XOR","OR","AND","NOT","NAND"],
+      "IsToggledOpen":false,
+      "Name":"Gates"
     }
   ]
 }
