@@ -1,0 +1,44 @@
+=> ---- Main Menu shortcuts
+Ctrl N                   :: NewProject
+Ctrl O                   :: OpenProject
+Ctrl S                   :: Settings
+Ctrl Q                   :: Quit
+                         ::
+=> ---- Bottom Bar Menu shortcuts ----
+Ctrl S                   :: Save
+Ctrl L                   :: Library
+Ctrl P                   :: Preferences
+Ctrl N                   :: CreateNewChip
+Ctrl Q                   :: QuitToMainMenu
+Ctrl F                   :: Search
+                         ::
+
+=> ---- Misc shortcuts ----
+Alt Shift D              :: Duplicate
+Ctrl G                   :: ToggleGrid
+Ctrl R                   :: ResetCamera
+Ctrl Z                   :: Undo
+Ctrl-Shift Z             :: Redo
+                         ::
+=> ---- Single key shortcuts ----
+KeyDown Escape           :: Cancel
+KeyDown Return           :: Confirm
+KeyDown KeypadEnter      :: ||
+KeyDown Backspace        :: Delete
+KeyDown Delete           :: ||
+KeyDown Space            :: SimNextStep
+!InputHelper.CtrlIsHeld; :: &&
+Ctrl Space               :: SimPauseToggle
+
+=> ---- Dev shortcuts ----
+Ctrl Shift Alt O         :: OpenSaveDataFolder
+
+=> ---- Modifiers ----
+Shift                    :: StraightLineModeHeld
+LeftShift                :: StraightLineModeHeld
+
+Ctrl                     :: SnapModeHeld
+
+Alt                      :: CameraAction
+Ctrl Alt Shift           :: TakeFirstFromCollectionModifierHeld
+

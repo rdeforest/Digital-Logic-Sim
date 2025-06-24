@@ -3,7 +3,7 @@
   "DLSVersion_LastSaved": "2.1.4",
   "DLSVersion_EarliestCompatible": "2.0.0",
   "CreationTime": "2025-04-27T18:52:26.677-07:00",
-  "LastSaveTime": "2025-04-27T19:14:45.721-07:00",
+  "LastSaveTime": "2025-06-10T20:15:39.879-07:00",
   "Prefs_MainPinNamesDisplayMode": 1,
   "Prefs_ChipPinNamesDisplayMode": 1,
   "Prefs_GridDisplayMode": 1,
@@ -15,34 +15,67 @@
   "AllCustomChipNames":[
     "NOT",
     "AND",
-    "XOR"
+    "XOR",
+    "NOR",
+    "SR Latch",
+    "Gated SR Latch",
+    "Gated D Latch",
+    "D Flip-Flop",
+    "[t] xy select",
+    "[t] 4x4 grid select",
+    "4-bit invert",
+    "2-bit decode",
+    "1-bit memory node",
+    "AND 3",
+    "16-bit RAM",
+    "256-bit RAM",
+    "256 byte RAM",
+    "15to4 adder",
+    "3-bit encoder",
+    "1-bit adder",
+    "OR",
+    "OR 4",
+    "15-pin adder",
+    "2-bit adder",
+    "4-bit adder",
+    "test GD latch",
+    "8x8 diff",
+    "4k byte RAM"
   ],
   "StarredList":[
+    {
+      "Name":"BASIC",
+      "IsCollection":true
+    },
     {
       "Name":"IN/OUT",
       "IsCollection":true
     },
     {
-      "Name":"NAND",
-      "IsCollection":false
+      "Name":"MERGE/SPLIT",
+      "IsCollection":true
     },
     {
-      "Name":"NOT",
-      "IsCollection":false
+      "Name":"Gates",
+      "IsCollection":true
     },
     {
-      "Name":"AND",
-      "IsCollection":false
+      "Name":"OTHER",
+      "IsCollection":true
     },
     {
-      "Name":"XOR",
+      "Name":"MEMORY",
+      "IsCollection":true
+    },
+    {
+      "Name":"4k byte RAM",
       "IsCollection":false
     }
   ],
   "ChipCollections":[
     {
-      "Chips":["NAND","CLOCK","PULSE","KEY","3-STATE BUFFER"],
-      "IsToggledOpen":true,
+      "Chips":["CLOCK","PULSE","KEY","3-STATE BUFFER"],
+      "IsToggledOpen":false,
       "Name":"BASIC"
     },
     {
@@ -66,13 +99,18 @@
       "Name":"DISPLAY"
     },
     {
-      "Chips":["ROM 256×16"],
-      "IsToggledOpen":true,
+      "Chips":["ROM 256×16","SR Latch","Gated SR Latch","Gated D Latch","D Flip-Flop","1-bit memory node","16-bit RAM","256-bit RAM","256 byte RAM"],
+      "IsToggledOpen":false,
       "Name":"MEMORY"
     },
     {
-      "Chips":["NOT"],
-      "IsToggledOpen":true,
+      "Chips":["NAND","AND","XOR","NOT","NOR","AND 3","OR","OR 4"],
+      "IsToggledOpen":false,
+      "Name":"Gates"
+    },
+    {
+      "Chips":["[t] xy select","[t] 4x4 grid select","4-bit invert","2-bit decode","15to4 adder","3-bit encoder","1-bit adder","15-pin adder","2-bit adder","4-bit adder","test GD latch","8x8 diff"],
+      "IsToggledOpen":false,
       "Name":"OTHER"
     }
   ]
