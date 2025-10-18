@@ -47,6 +47,11 @@ namespace DLS.Simulation
 			nextWave.Remove(chip);
 		}
 
+		public static void AddToCurrentWave(SimChip chip)
+		{
+			currentWave.Add(chip);
+		}
+
 		// ---- Simulation outline ----
 		// 1) Forward the initial player-controlled input states to all connected pins.
 		// 2) Loop over all subchips not yet processed this frame, and process them if they are ready (i.e. all input pins have received all their inputs)
