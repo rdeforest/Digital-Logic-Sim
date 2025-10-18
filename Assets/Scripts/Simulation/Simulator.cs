@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Linq; // For Array.Append and Array.Empty
 using DLS.Description;
 using DLS.Game;
 using DLS.Simulation.ChipProcessors;
@@ -18,11 +17,9 @@ namespace DLS.Simulation
 		public static int simulationFrame;
 		static uint pcg_rngState;
 
-		// When sim is first built, or whenever modified, it needs to run a less efficient pass in which the traversal order of the chips is determined
 		public static bool needsOrderPass;
-
-		// Every n frames the simulation permits some random modifications to traversal order of sequential chips (to randomize outcome of race conditions)
 		public static bool canDynamicReorderThisFrame;
+		public static bool debug_deterministicMode = false;
 
 		static SimChip prevRootSimChip;
 		static double elapsedSecondsOld;
@@ -32,20 +29,22 @@ namespace DLS.Simulation
 		// Modifications to the sim are made from the main thread, but only applied on the sim thread to avoid conflicts
 		static readonly ConcurrentQueue<SimModifyCommand> modificationQueue = new();
 
-		// Chips that need further processing this frame (i.e. have dirty pins)
-		static readonly System.Collections.Generic.Queue<SimChip> dirtyChips = new();
+		static System.Collections.Generic.HashSet<SimChip> currentWave = new();
+		static System.Collections.Generic.HashSet<SimChip> nextWave = new();
 
-		/// <summary>
-		/// Add a chip to the dirty chips queue if it's not already there.
-		/// This should be called when a chip changes state spontaneously (like Clock or Key chips).
-		/// </summary>
-		/// <param name="chip">The chip that has become dirty</param>
 		public static void AddDirtyChip(SimChip chip)
 		{
-			if (!dirtyChips.Contains(chip))
-			{
-				dirtyChips.Enqueue(chip);
-			}
+			nextWave.Add(chip);
+		}
+
+		public static bool IsInNextWave(SimChip chip)
+		{
+			return nextWave.Contains(chip);
+		}
+
+		public static void RemoveFromNextWave(SimChip chip)
+		{
+			nextWave.Remove(chip);
 		}
 
 		// ---- Simulation outline ----
@@ -73,7 +72,8 @@ namespace DLS.Simulation
 			{
 				needsOrderPass = true;
 				prevRootSimChip = rootSimChip;
-				dirtyChips.Clear();
+				currentWave.Clear();
+				nextWave.Clear();
 			}
 
 			pcg_rngState = (uint)rng.Next();
@@ -106,22 +106,24 @@ namespace DLS.Simulation
 			}
 			else
 			{
-				if (dirtyChips.Count == 0)
+				if (currentWave.Count == 0 && nextWave.Count == 0)
 				{
-					dirtyChips.Enqueue(rootSimChip);
+					currentWave.Add(rootSimChip);
 				}
 
-				ProcessOneDirtyChip();
+				if (currentWave.Count == 0)
+				{
+					(currentWave, nextWave) = (nextWave, currentWave);
+				}
+
+				foreach (SimChip chip in currentWave)
+				{
+					chip.StepChip();
+				}
+				currentWave.Clear();
 			}
 
 			UpdateAudioState();
-		}
-
-		private static void ProcessOneDirtyChip()
-		{
-			dirtyChips
-			  .Dequeue()
-			  .StepChip();
 		}
 
         public static void UpdateInPausedState()
@@ -310,7 +312,8 @@ namespace DLS.Simulation
 			modificationQueue?.Clear();
 			stopwatch.Restart();
 			elapsedSecondsOld = 0;
-			dirtyChips?.Clear();
+			currentWave?.Clear();
+			nextWave?.Clear();
 		}
 
 		struct SimModifyCommand

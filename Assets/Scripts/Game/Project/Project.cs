@@ -540,8 +540,9 @@ namespace DLS.Game
 
 					// ---- Run sim ----
 					Simulator.stepsPerClockTransition = stepsPerClockTransition;
+					Simulator.debug_deterministicMode = description.Prefs_SimDeterministicMode;
 					SimChip simChip = rootSimChip;
-					if (simChip == null) continue; // Could potentially be null for a frame when switching between chips
+					if (simChip == null) continue;
 					Simulator.RunSimulationStep(simChip, inputPins, audioState.simAudio);
 
 					// ---- Wait some amount of time (if needed) to try to hit the target ticks per second ----
@@ -588,6 +589,7 @@ namespace DLS.Game
 		void Debug_RunMainThreadSimStep()
 		{
 			Simulator.stepsPerClockTransition = stepsPerClockTransition;
+			Simulator.debug_deterministicMode = description.Prefs_SimDeterministicMode;
 			Simulator.ApplyModifications();
 			Simulator.RunSimulationStep(rootSimChip, inputPins, audioState.simAudio);
 			ViewedChip.UpdateStateFromSim(ViewedSimChip, !CanEditViewedChip);

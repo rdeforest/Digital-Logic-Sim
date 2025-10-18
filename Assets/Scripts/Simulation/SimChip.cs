@@ -65,14 +65,16 @@ namespace DLS.Simulation
 			}
 			else if (ChipType is ChipType.dev_Ram_8Bit)
 			{
-				InternalState = new uint[addressSize_8Bit + 1]; // +1 for clock state (to allow edge-trigger behaviour)
+				InternalState = new uint[addressSize_8Bit + 1];
 
-				// Initialize memory contents to random state
-				Span<byte> randomBytes = stackalloc byte[4];
-				for (int i = 0; i < InternalState.Length - 1; i++)
+				if (!Simulator.debug_deterministicMode)
 				{
-					Simulator.rng.NextBytes(randomBytes);
-					InternalState[i] = BitConverter.ToUInt32(randomBytes);
+					Span<byte> randomBytes = stackalloc byte[4];
+					for (int i = 0; i < InternalState.Length - 1; i++)
+					{
+						Simulator.rng.NextBytes(randomBytes);
+						InternalState[i] = BitConverter.ToUInt32(randomBytes);
+					}
 				}
 			}
 			// Load in serialized persistent state (rom data, etc.)

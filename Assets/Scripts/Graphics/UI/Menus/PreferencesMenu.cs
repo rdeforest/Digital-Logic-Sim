@@ -51,6 +51,12 @@ namespace DLS.Graphics
 			"Paused"
 		};
 
+		static readonly string[] DeterministicModeOptions =
+		{
+			"Off",
+			"On"
+		};
+
 		static readonly Vector2 entrySize = new(menuWidth, DrawSettings.SelectorWheelHeight);
 		public static readonly Vector2 settingFieldSize = new(entrySize.x / 3, entrySize.y);
 
@@ -63,6 +69,7 @@ namespace DLS.Graphics
 		static readonly UIHandle ID_SimStatus = new("PREFS_SimStatus");
 		static readonly UIHandle ID_SimFrequencyField = new("PREFS_SimTickTarget");
 		static readonly UIHandle ID_ClockSpeedInput = new("PREFS_ClockSpeed");
+		static readonly UIHandle ID_DeterministicMode = new("PREFS_DeterministicMode");
 
 		static readonly string showGridLabel = "Show grid" + CreateShortcutString("Ctrl+G");
 		static readonly string simStatusLabel = "Sim Status" + CreateShortcutString("Ctrl+Space");
@@ -106,6 +113,7 @@ namespace DLS.Graphics
 				DrawHeader("SIMULATION:");
 				bool pauseSim = MenuHelper.LabeledOptionsWheel(simStatusLabel, labelCol, labelPosCurr, entrySize, ID_SimStatus, SimulationStatusOptions, settingFieldSize.x, true) == 1;
 				AddSpacing();
+				bool deterministicMode = DrawNextWheel("Deterministic mode", DeterministicModeOptions, ID_DeterministicMode) == 1;
 				InputFieldState clockSpeedInputFieldState = MenuHelper.LabeledInputField("Steps per clock tick", labelCol, labelPosCurr, entrySize, ID_ClockSpeedInput, integerInputValidator, settingFieldSize.x, true);
 				AddSpacing();
 				InputFieldState freqState = MenuHelper.LabeledInputField("Steps per second (target)", labelCol, labelPosCurr, entrySize, ID_SimFrequencyField, integerInputValidator, settingFieldSize.x, true);
@@ -140,6 +148,7 @@ namespace DLS.Graphics
 				project.description.Prefs_SimTargetStepsPerSecond = targetSimTicksPerSecond;
 				project.description.Prefs_SimStepsPerClockTick = clockSpeed;
 				project.description.Prefs_SimPaused = pauseSim;
+				project.description.Prefs_SimDeterministicMode = deterministicMode;
 
 				// Cancel / Confirm
 				if (result == MenuHelper.CancelConfirmResult.Cancel)
@@ -207,6 +216,7 @@ namespace DLS.Graphics
 			UI.GetWheelSelectorState(ID_Snapping).index = projDesc.Prefs_Snapping;
 			UI.GetWheelSelectorState(ID_StraightWires).index = projDesc.Prefs_StraightWires;
 			UI.GetWheelSelectorState(ID_SimStatus).index = projDesc.Prefs_SimPaused ? 1 : 0;
+			UI.GetWheelSelectorState(ID_DeterministicMode).index = projDesc.Prefs_SimDeterministicMode ? 1 : 0;
 			// -- Input fields
 			UI.GetInputFieldState(ID_SimFrequencyField).SetText(projDesc.Prefs_SimTargetStepsPerSecond + "", false);
 			UI.GetInputFieldState(ID_ClockSpeedInput).SetText(projDesc.Prefs_SimStepsPerClockTick + "", false);
