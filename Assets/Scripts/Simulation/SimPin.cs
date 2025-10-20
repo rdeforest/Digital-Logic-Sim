@@ -18,7 +18,14 @@ namespace DLS.Simulation
 				if (_state != value)
 				{
 					_state = value;
-					Simulator.AddDirtyChip(parentChip);
+
+					// Output pins always propagate their changes to connected inputs
+					if (!isInput)
+					{
+						PropagateSignal();
+					}
+					// Input pins are handled by NotifyChipIfReady() for transparent chips
+					// Wave-processing chips no longer need dirty marking - topological sort handles execution order
 				}
 			}
 		}
@@ -131,10 +138,21 @@ namespace DLS.Simulation
 
 		private void NotifyChipIfReady()
 		{
-			// If this is a sub-chip input pin, and has received all of its connections, notify the sub-chip that the input is ready
+			// If this is a sub-chip input pin, and has received all of its connections, trigger processing
 			if (isInput && numInputsReceivedThisFrame == numInputConnections)
 			{
-				parentChip.numInputsReady++;
+				// Custom chips are containers - propagate their inputs through to internal primitives
+				if (parentChip.ChipType == DLS.Description.ChipType.Custom)
+				{
+					parentChip.Sim_PropagateInputs();
+					return;
+				}
+
+				// For transparent components, process immediately when all inputs received
+				if (!DLS.Description.ChipTypeHelper.RequiresWaveProcessing(parentChip.ChipType))
+				{
+					parentChip.StepChip();
+				}
 			}
 		}
 	}

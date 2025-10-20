@@ -108,5 +108,21 @@ namespace DLS.Description
 				_ => (false, false, PinBitCount.Bit1)
 			};
 		}
+
+	/// <summary>
+	/// Returns true if this chip type requires wave-based breadth-first processing.
+	/// These are components where evaluation order matters (logic gates, memory).
+	/// All other components are transparent and propagate signals immediately.
+	/// </summary>
+	public static bool RequiresWaveProcessing(ChipType type)
+	{
+		return type is ChipType.Nand
+			or ChipType.TriStateBuffer
+			or ChipType.dev_Ram_8Bit
+			or ChipType.Rom_256x16
+			or ChipType.Clock
+			or ChipType.Pulse
+			or ChipType.Key;
 	}
+}
 }

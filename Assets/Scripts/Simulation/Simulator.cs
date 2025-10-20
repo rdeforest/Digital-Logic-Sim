@@ -17,7 +17,6 @@ namespace DLS.Simulation
 		public static int simulationFrame;
 		static uint pcg_rngState;
 
-		public static bool needsOrderPass;
 		public static bool canDynamicReorderThisFrame;
 		public static bool debug_deterministicMode = false;
 
@@ -29,28 +28,15 @@ namespace DLS.Simulation
 		// Modifications to the sim are made from the main thread, but only applied on the sim thread to avoid conflicts
 		static readonly ConcurrentQueue<SimModifyCommand> modificationQueue = new();
 
-		static System.Collections.Generic.HashSet<SimChip> currentWave = new();
-		static System.Collections.Generic.HashSet<SimChip> nextWave = new();
+		// Flat list of all primitive (non-custom) chips in the current circuit
+		static System.Collections.Generic.List<SimChip> allPrimitiveChips = new();
 
-		public static void AddDirtyChip(SimChip chip)
-		{
-			nextWave.Add(chip);
-		}
+		// Topologically sorted list of primitives (computed once when circuit loads)
+		// Chips are ordered so dependencies come before dependents (as much as possible)
+		// Chips in feedback loops are placed in arbitrary but consistent order
+		static System.Collections.Generic.List<SimChip> sortedPrimitives = new();
 
-		public static bool IsInNextWave(SimChip chip)
-		{
-			return nextWave.Contains(chip);
-		}
-
-		public static void RemoveFromNextWave(SimChip chip)
-		{
-			nextWave.Remove(chip);
-		}
-
-		public static void AddToCurrentWave(SimChip chip)
-		{
-			currentWave.Add(chip);
-		}
+		/// <summary>
 
 		// ---- Simulation outline ----
 		// 1) Forward the initial player-controlled input states to all connected pins.
@@ -73,60 +59,25 @@ namespace DLS.Simulation
 			Simulator.audioState = audioState;
 			audioState.InitFrame();
 
-			if (rootSimChip != prevRootSimChip)
+			HandleRootChipChange(rootSimChip);
+
+			pcg_rngState                = (uint)rng.Next();
+			canDynamicReorderThisFrame  = simulationFrame % 100 == 0;
+
+			CopyPlayerInputsToSim(rootSimChip, inputPins);
+
+			// Propagate root chip inputs through the circuit hierarchy
+			PropagateRootInputs(rootSimChip);
+
+			// Process all chips in topologically sorted order
+			// This ensures dependencies are evaluated before dependents
+			// Chips in feedback loops use values from the previous step
+			foreach (SimChip chip in sortedPrimitives)
 			{
-				needsOrderPass = true;
-				prevRootSimChip = rootSimChip;
-				currentWave.Clear();
-				nextWave.Clear();
+				chip.StepChip();
 			}
 
-			pcg_rngState = (uint)rng.Next();
-			canDynamicReorderThisFrame = simulationFrame % 100 == 0;
-			simulationFrame++; //
-
-			// Step 1) Get player-controlled input states and copy values to the sim
-			foreach (DevPinInstance input in inputPins)
-			{
-				try
-				{
-					SimPin simPin = rootSimChip.GetSimPinFromAddress(input.Pin.Address);
-					uint simPinState = simPin.State;
-					PinState.Set(ref simPinState, input.Pin.PlayerInputState);
-					simPin.State = simPinState;
-
-					input.Pin.State = input.Pin.PlayerInputState;
-				}
-				catch (Exception)
-				{
-					// Possible for sim to be temporarily out of sync since running on separate threads, so just ignore failure to find pin.
-				}
-			}
-
-			// Process
-			if (needsOrderPass)
-			{
-				rootSimChip.StepChipReorder();
-				needsOrderPass = false;
-			}
-			else
-			{
-				if (currentWave.Count == 0 && nextWave.Count == 0)
-				{
-					currentWave.Add(rootSimChip);
-				}
-
-				if (currentWave.Count == 0)
-				{
-					(currentWave, nextWave) = (nextWave, currentWave);
-				}
-
-				foreach (SimChip chip in currentWave)
-				{
-					chip.StepChip();
-				}
-				currentWave.Clear();
-			}
+			CompleteStep();
 
 			UpdateAudioState();
 		}
@@ -147,6 +98,186 @@ namespace DLS.Simulation
 			else deltaTime = elapsedSeconds - elapsedSecondsOld;
 			elapsedSecondsOld = stopwatch.Elapsed.TotalSeconds;
 			audioState.NotifyAllNotesRegistered(deltaTime);
+		}
+
+		static void HandleRootChipChange(SimChip rootSimChip)
+		{
+			if (rootSimChip != prevRootSimChip)
+			{
+				prevRootSimChip = rootSimChip;
+
+				// Build flat list of all primitive chips
+				allPrimitiveChips.Clear();
+				CollectPrimitiveChips(rootSimChip, allPrimitiveChips);
+
+				// Topologically sort primitives for optimal execution order
+				sortedPrimitives = TopologicalSort(allPrimitiveChips);
+			}
+		}
+
+		/// <summary>
+		/// Recursively collect all primitive (non-custom) chips from a chip hierarchy.
+		/// Custom chips are just containers - we flatten them to get the actual logic chips.
+		/// </summary>
+		static void CollectPrimitiveChips(SimChip chip, System.Collections.Generic.List<SimChip> primitives)
+		{
+			foreach (SimChip subChip in chip.SubChips)
+			{
+				if (subChip.ChipType == ChipType.Custom)
+				{
+					// Custom chip - recurse to find primitives inside
+					CollectPrimitiveChips(subChip, primitives);
+				}
+				else
+				{
+					// Primitive chip - add to flat list
+					primitives.Add(subChip);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Recursively propagate root chip's inputs through all custom chip containers.
+		/// This ensures that when you set an input pin on the root chip, it flows through
+		/// the custom chip hierarchy to reach the actual primitive chips inside.
+		/// </summary>
+		static void PropagateRootInputs(SimChip chip)
+		{
+			// Propagate this chip's inputs to its internal connections
+			chip.Sim_PropagateInputs();
+
+			// Recursively propagate through custom subchips
+			foreach (SimChip subChip in chip.SubChips)
+			{
+				if (subChip.ChipType == ChipType.Custom)
+				{
+					PropagateRootInputs(subChip);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Topologically sort chips using Kahn's algorithm (BFS-based).
+		/// This gives breadth-first ordering: chips at the same "level" from inputs process together.
+		/// Chips are ordered so dependencies come before dependents.
+		/// Chips in feedback loops are handled by processing chips with satisfied dependencies first.
+		/// </summary>
+		static System.Collections.Generic.List<SimChip> TopologicalSort(System.Collections.Generic.List<SimChip> chips)
+		{
+			var sorted = new System.Collections.Generic.List<SimChip>();
+			var inDegree = new System.Collections.Generic.Dictionary<SimChip, int>();
+			var queue = new System.Collections.Generic.Queue<SimChip>();
+
+			// Calculate in-degree for each chip (number of dependencies)
+			foreach (SimChip chip in chips)
+			{
+				int numDependencies = 0;
+				foreach (SimPin inputPin in chip.InputPins)
+				{
+					foreach (SimPin sourcePin in GetSourcePinsForSort(inputPin))
+					{
+						// Skip self-loops - chip doesn't depend on itself for initial ordering
+						if (sourcePin.parentChip != chip)
+						{
+							numDependencies++;
+							break; // One dependency per input pin is enough for counting
+						}
+					}
+				}
+				inDegree[chip] = numDependencies;
+
+				// Chips with no dependencies start in the queue
+				if (numDependencies == 0)
+				{
+					queue.Enqueue(chip);
+				}
+			}
+
+			// Process chips in breadth-first order
+			while (queue.Count > 0)
+			{
+				SimChip chip = queue.Dequeue();
+				sorted.Add(chip);
+
+				// Reduce in-degree of dependent chips
+				foreach (SimPin outputPin in chip.OutputPins)
+				{
+					foreach (SimPin targetPin in outputPin.ConnectedTargetPins)
+					{
+						SimChip dependent = targetPin.parentChip;
+
+						// Skip self-loops
+						if (dependent == chip)
+							continue;
+
+						if (inDegree.ContainsKey(dependent))
+						{
+							inDegree[dependent]--;
+							if (inDegree[dependent] == 0)
+							{
+								queue.Enqueue(dependent);
+							}
+						}
+					}
+				}
+			}
+
+			// Handle cycles: any chips not yet sorted are in cycles
+			// Add them in arbitrary order
+			foreach (SimChip chip in chips)
+			{
+				if (!sorted.Contains(chip))
+				{
+					sorted.Add(chip);
+				}
+			}
+
+			return sorted;
+		}
+
+		/// <summary>
+		/// Get source pins for topological sort. Similar to GetSourcePins but optimized
+		/// for the one-time sort operation.
+		/// </summary>
+		static System.Collections.Generic.IEnumerable<SimPin> GetSourcePinsForSort(SimPin inputPin)
+		{
+			// Search through all primitives to find who connects to this input
+			foreach (SimChip primitive in allPrimitiveChips)
+			{
+				foreach (SimPin outputPin in primitive.OutputPins)
+				{
+					if (Array.Exists(outputPin.ConnectedTargetPins, target => target == inputPin))
+					{
+						yield return outputPin;
+					}
+				}
+			}
+		}
+
+		static void CopyPlayerInputsToSim(SimChip rootSimChip, DevPinInstance[] inputPins)
+		{
+			foreach (DevPinInstance input in inputPins)
+			{
+				try
+				{
+					SimPin simPin    = rootSimChip.GetSimPinFromAddress(input.Pin.Address);
+					uint simPinState = simPin.State;
+					PinState.Set(ref simPinState, input.Pin.PlayerInputState);
+					simPin.State = simPinState;
+
+					input.Pin.State = input.Pin.PlayerInputState;
+				}
+				catch (Exception)
+				{
+				}
+			}
+		}
+
+
+
+		static void CompleteStep()
+		{
+			simulationFrame++;
 		}
 
 
@@ -278,8 +409,6 @@ namespace DLS.Simulation
 		{
 			while (modificationQueue.Count > 0)
 			{
-				needsOrderPass = true;
-
 				if (modificationQueue.TryDequeue(out SimModifyCommand cmd))
 				{
 					if (cmd.type == SimModifyCommand.ModificationType.AddSubchip)
@@ -317,8 +446,6 @@ namespace DLS.Simulation
 			modificationQueue?.Clear();
 			stopwatch.Restart();
 			elapsedSecondsOld = 0;
-			currentWave?.Clear();
-			nextWave?.Clear();
 		}
 
 		struct SimModifyCommand

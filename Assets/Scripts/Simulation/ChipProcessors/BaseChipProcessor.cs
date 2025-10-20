@@ -16,9 +16,6 @@ namespace DLS.Simulation.ChipProcessors
         /// <param name="chip">The SimChip instance to process</param>
         public virtual void StepChip(SimChip chip)
         {
-            // Propagate signal from all input dev-pins to all their connected pins
-            chip.Sim_PropagateInputs();
-
             // Call the chip-specific processing logic (works for both builtin and custom chips)
             ProcessChip(chip);
 
