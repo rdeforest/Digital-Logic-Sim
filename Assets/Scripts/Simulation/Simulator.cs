@@ -707,7 +707,8 @@ namespace DLS.Simulation
 			// Process all chips in topologically sorted order
 			foreach (SimChip chip in sortedPrimitives)
 			{
-				chip.StepChip();
+				ProcessBuiltinChip(chip);
+				chip.Sim_PropagateOutputs();
 			}
 		}
 
