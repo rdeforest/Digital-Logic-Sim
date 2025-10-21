@@ -15,6 +15,9 @@ namespace DLS.Simulation
 		public static int simulationFrame;
 		static uint pcg_rngState;
 
+		// Simulation mode selection (can be changed at runtime)
+		public static SimulationMode CurrentMode = SimulationMode.DepthFirst;
+
 		// When sim is first built, or whenever modified, it needs to run a less efficient pass in which the traversal order of the chips is determined
 		public static bool needsOrderPass;
 
@@ -28,6 +31,14 @@ namespace DLS.Simulation
 
 		// Modifications to the sim are made from the main thread, but only applied on the sim thread to avoid conflicts
 		static readonly ConcurrentQueue<SimModifyCommand> modificationQueue = new();
+
+		// ===== Breadth-First Mode Data Structures =====
+		// Flat list of all primitive (non-custom) chips in the current circuit
+		static System.Collections.Generic.List<SimChip> allPrimitiveChips = new();
+		// Topologically sorted list of primitives (computed once when circuit loads or after modifications)
+		static System.Collections.Generic.List<SimChip> sortedPrimitives = new();
+		// Flag to indicate that the circuit structure has changed and needs re-sorting
+		static bool needsResort = false;
 
 		// ---- Simulation outline ----
 		// 1) Forward the initial player-controlled input states to all connected pins.
@@ -76,15 +87,24 @@ namespace DLS.Simulation
 				}
 			}
 
-			// Process
-			if (needsOrderPass)
+			// Process using selected algorithm
+			if (CurrentMode == SimulationMode.DepthFirst)
 			{
-				StepChipReorder(rootSimChip);
-				needsOrderPass = false;
+				// ===== SEBASTIAN'S ORIGINAL DEPTH-FIRST ALGORITHM =====
+				if (needsOrderPass)
+				{
+					StepChipReorder(rootSimChip);
+					needsOrderPass = false;
+				}
+				else
+				{
+					StepChip(rootSimChip);
+				}
 			}
-			else
+			else // BreadthFirst
 			{
-				StepChip(rootSimChip);
+				// ===== PROPOSED BREADTH-FIRST TOPOLOGICAL SORT =====
+				RunBreadthFirstStep(rootSimChip);
 			}
 
 			UpdateAudioState();
@@ -634,7 +654,8 @@ namespace DLS.Simulation
 		{
 			while (modificationQueue.Count > 0)
 			{
-				needsOrderPass = true;
+				needsOrderPass = true;  // For depth-first mode
+				needsResort = true;     // For breadth-first mode
 
 				if (modificationQueue.TryDequeue(out SimModifyCommand cmd))
 				{
@@ -666,6 +687,128 @@ namespace DLS.Simulation
 				}
 			}
 		}
+
+		// ========== BREADTH-FIRST ALGORITHM IMPLEMENTATION ==========
+
+		static void RunBreadthFirstStep(SimChip rootSimChip)
+		{
+			// Handle root chip change or modifications
+			if (rootSimChip != prevRootSimChip || needsResort)
+			{
+				allPrimitiveChips.Clear();
+				CollectPrimitiveChips(rootSimChip, allPrimitiveChips);
+				sortedPrimitives = TopologicalSort(allPrimitiveChips);
+				needsResort = false;
+			}
+
+			// Propagate root chip inputs through the circuit hierarchy
+			PropagateRootInputs(rootSimChip);
+
+			// Process all chips in topologically sorted order
+			foreach (SimChip chip in sortedPrimitives)
+			{
+				chip.StepChip();
+			}
+		}
+
+		static void CollectPrimitiveChips(SimChip chip, System.Collections.Generic.List<SimChip> primitives)
+		{
+			foreach (SimChip subChip in chip.SubChips)
+			{
+				if (subChip.ChipType == ChipType.Custom)
+				{
+					CollectPrimitiveChips(subChip, primitives);
+				}
+				else if (IsDevPin(subChip.ChipType))
+				{
+					// Dev pins are just connection points - skip them
+				}
+				else
+				{
+					primitives.Add(subChip);
+				}
+			}
+		}
+
+		static bool IsDevPin(ChipType type)
+		{
+			return type == ChipType.In_1Bit || type == ChipType.In_4Bit || type == ChipType.In_8Bit
+				|| type == ChipType.Out_1Bit || type == ChipType.Out_4Bit || type == ChipType.Out_8Bit;
+		}
+
+		static void PropagateRootInputs(SimChip chip)
+		{
+			chip.Sim_PropagateInputs();
+			foreach (SimChip subChip in chip.SubChips)
+			{
+				if (subChip.ChipType == ChipType.Custom)
+				{
+					PropagateRootInputs(subChip);
+				}
+			}
+		}
+
+		static System.Collections.Generic.List<SimChip> TopologicalSort(System.Collections.Generic.List<SimChip> chips)
+		{
+			var sorted = new System.Collections.Generic.List<SimChip>();
+			int index = 0;
+
+			// Start with chips that have no connected inputs
+			foreach (SimChip chip in chips)
+			{
+				if (HasNoConnectedInputs(chip))
+				{
+					sorted.Add(chip);
+				}
+			}
+
+			// Traverse: for each chip, add all chips it outputs to (if not already in list)
+			while (index < sorted.Count)
+			{
+				SimChip chip = sorted[index++];
+
+				foreach (SimPin outputPin in chip.OutputPins)
+				{
+					foreach (SimPin targetPin in outputPin.ConnectedTargetPins)
+					{
+						SimChip dependent = targetPin.parentChip;
+
+						if (dependent == chip || dependent.ChipType == ChipType.Custom)
+							continue;
+
+						if (!sorted.Contains(dependent))
+						{
+							sorted.Add(dependent);
+						}
+					}
+				}
+			}
+
+			// Ensure we didn't miss any chips (defensive)
+			foreach (SimChip chip in chips)
+			{
+				if (!sorted.Contains(chip))
+				{
+					sorted.Add(chip);
+				}
+			}
+
+			return sorted;
+		}
+
+		static bool HasNoConnectedInputs(SimChip chip)
+		{
+			foreach (SimPin inputPin in chip.InputPins)
+			{
+				if (inputPin.numInputConnections > 0)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		// ========== END BREADTH-FIRST ALGORITHM ==========
 
 		public static void Reset()
 		{
