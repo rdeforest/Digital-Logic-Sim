@@ -39,6 +39,8 @@ namespace DLS.Simulation.ChipProcessors
             RegisterProcessor(new Split8To1BitChipProcessor());
             RegisterProcessor(new DisplayRGBChipProcessor());
             RegisterProcessor(new DisplayDotChipProcessor());
+            RegisterProcessor(new SevenSegmentDisplayChipProcessor());
+            RegisterProcessor(new DisplayLEDChipProcessor());
             RegisterProcessor(new Rom256x16ChipProcessor());
 
             // Register bus processor for all bus types

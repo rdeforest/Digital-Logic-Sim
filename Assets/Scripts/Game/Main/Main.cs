@@ -118,6 +118,7 @@ namespace DLS.Game
 		static void HandleGlobalInput()
 		{
 			if (KeyboardShortcuts.OpenSaveDataFolderShortcutTriggered) OpenSaveDataFolderInFileBrowser();
+			if (KeyboardShortcuts.DebugLogChipDepthsShortcutTriggered) Simulation.Simulator.LogChipDepths();
 		}
 
 		public class Version

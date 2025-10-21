@@ -3,13 +3,13 @@
   "DLSVersion_LastSaved": "2.1.6",
   "DLSVersion_EarliestCompatible": "2.0.0",
   "CreationTime": "2025-03-14T10:23:30.404-07:00",
-  "LastSaveTime": "2025-10-19T20:43:32.614-07:00",
+  "LastSaveTime": "2025-10-20T19:48:20.789-07:00",
   "Prefs_MainPinNamesDisplayMode": 2,
   "Prefs_ChipPinNamesDisplayMode": 1,
   "Prefs_GridDisplayMode": 1,
   "Prefs_Snapping": 1,
   "Prefs_StraightWires": 0,
-  "Prefs_SimPaused": true,
+  "Prefs_SimPaused": false,
   "Prefs_SimTargetStepsPerSecond": 10000,
   "Prefs_SimStepsPerClockTick": 100,
   "Prefs_SimDeterministicMode": false,
@@ -71,37 +71,13 @@
     "4cNAND+merge",
     "4-in+4cNAND+4-out",
     "NAND - cNand",
-    "NAND loop"
+    "NAND loop",
+    "TestSelfLoop",
+    "TestChain",
+    "TestSRLatch",
+    "TestClock"
   ],
   "StarredList":[
-    {
-      "Name":"4NAND+merge",
-      "IsCollection":false
-    },
-    {
-      "Name":"cNAND",
-      "IsCollection":false
-    },
-    {
-      "Name":"4cNAND+merge",
-      "IsCollection":false
-    },
-    {
-      "Name":"4-in+4cNAND+4-out",
-      "IsCollection":false
-    },
-    {
-      "Name":"NAND - cNand",
-      "IsCollection":false
-    },
-    {
-      "Name":"NAND loop",
-      "IsCollection":false
-    },
-    {
-      "Name":"NAND",
-      "IsCollection":false
-    },
     {
       "Name":"BASICS",
       "IsCollection":true
@@ -112,6 +88,14 @@
     },
     {
       "Name":"MERGE/SPLIT",
+      "IsCollection":true
+    },
+    {
+      "Name":"KEEP",
+      "IsCollection":true
+    },
+    {
+      "Name":"OTHER",
       "IsCollection":true
     }
   ],
@@ -153,8 +137,13 @@
     },
     {
       "Chips":["WIP2","RAM-sync"],
-      "IsToggledOpen":false,
+      "IsToggledOpen":true,
       "Name":"TEST"
+    },
+    {
+      "Chips":["TestSelfLoop","TestChain","TestSRLatch","TestClock"],
+      "IsToggledOpen":true,
+      "Name":"TOPOLOGICAL TESTS"
     },
     {
       "Chips":["PULSE","TEST MergeSplit","BUZZER","#","BuzzTest","foo","NAND-NOT-NOT-NOT","4NAND+merge","cNAND","4cNAND+merge","4-in+4cNAND+4-out","NAND - cNand","NAND loop"],

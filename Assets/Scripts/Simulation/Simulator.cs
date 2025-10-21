@@ -31,10 +31,16 @@ namespace DLS.Simulation
 		// Flat list of all primitive (non-custom) chips in the current circuit
 		static System.Collections.Generic.List<SimChip> allPrimitiveChips = new();
 
-		// Topologically sorted list of primitives (computed once when circuit loads)
+		// Topologically sorted list of primitives (computed once when circuit loads or after modifications)
 		// Chips are ordered so dependencies come before dependents (as much as possible)
 		// Chips in feedback loops are placed in arbitrary but consistent order
 		static System.Collections.Generic.List<SimChip> sortedPrimitives = new();
+
+		// Flag to indicate that the circuit structure has changed and needs re-sorting
+		static bool needsResort = false;
+
+		// Debug flag: set to true to log chip depths after next resort
+		public static bool debugLogDepths = false;
 
 		/// <summary>
 
@@ -60,6 +66,22 @@ namespace DLS.Simulation
 			audioState.InitFrame();
 
 			HandleRootChipChange(rootSimChip);
+
+			// If circuit structure changed, rebuild the topological sort
+			if (needsResort)
+			{
+				allPrimitiveChips.Clear();
+				CollectPrimitiveChips(rootSimChip, allPrimitiveChips);
+				sortedPrimitives = TopologicalSort(allPrimitiveChips);
+				needsResort = false;
+
+				// Debug logging
+				if (debugLogDepths)
+				{
+					LogChipDepths();
+					debugLogDepths = false;
+				}
+			}
 
 			pcg_rngState                = (uint)rng.Next();
 			canDynamicReorderThisFrame  = simulationFrame % 100 == 0;
@@ -118,6 +140,7 @@ namespace DLS.Simulation
 		/// <summary>
 		/// Recursively collect all primitive (non-custom) chips from a chip hierarchy.
 		/// Custom chips are just containers - we flatten them to get the actual logic chips.
+		/// In/Out dev pins are excluded - they're just connection points, not processing chips.
 		/// </summary>
 		static void CollectPrimitiveChips(SimChip chip, System.Collections.Generic.List<SimChip> primitives)
 		{
@@ -128,12 +151,26 @@ namespace DLS.Simulation
 					// Custom chip - recurse to find primitives inside
 					CollectPrimitiveChips(subChip, primitives);
 				}
+				else if (IsDevPin(subChip.ChipType))
+				{
+					// Dev pins (In/Out) are just connection points - skip them
+					// They don't need processing, signals flow through them passively
+				}
 				else
 				{
 					// Primitive chip - add to flat list
 					primitives.Add(subChip);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Check if a chip type is a dev pin (input/output port on custom chips)
+		/// </summary>
+		static bool IsDevPin(ChipType type)
+		{
+			return type == ChipType.In_1Bit || type == ChipType.In_4Bit || type == ChipType.In_8Bit
+				|| type == ChipType.Out_1Bit || type == ChipType.Out_4Bit || type == ChipType.Out_8Bit;
 		}
 
 		/// <summary>
@@ -157,73 +194,51 @@ namespace DLS.Simulation
 		}
 
 		/// <summary>
-		/// Topologically sort chips using Kahn's algorithm (BFS-based).
-		/// This gives breadth-first ordering: chips at the same "level" from inputs process together.
-		/// Chips are ordered so dependencies come before dependents.
-		/// Chips in feedback loops are handled by processing chips with satisfied dependencies first.
+		/// Build topological traversal list using simple BFS.
+		/// Start with chips that have no inputs, then traverse outputs, adding each chip once.
+		/// This naturally handles cycles - they get added when first encountered.
+		/// Gives breadth-first ordering: chips at the same distance from inputs process together.
 		/// </summary>
 		static System.Collections.Generic.List<SimChip> TopologicalSort(System.Collections.Generic.List<SimChip> chips)
 		{
 			var sorted = new System.Collections.Generic.List<SimChip>();
-			var inDegree = new System.Collections.Generic.Dictionary<SimChip, int>();
-			var queue = new System.Collections.Generic.Queue<SimChip>();
+			int index = 0;
 
-			// Calculate in-degree for each chip (number of dependencies)
+			// Start with chips that have no connected inputs
 			foreach (SimChip chip in chips)
 			{
-				int numDependencies = 0;
-				foreach (SimPin inputPin in chip.InputPins)
+				if (HasNoConnectedInputs(chip))
 				{
-					foreach (SimPin sourcePin in GetSourcePinsForSort(inputPin))
-					{
-						// Skip self-loops - chip doesn't depend on itself for initial ordering
-						if (sourcePin.parentChip != chip)
-						{
-							numDependencies++;
-							break; // One dependency per input pin is enough for counting
-						}
-					}
-				}
-				inDegree[chip] = numDependencies;
-
-				// Chips with no dependencies start in the queue
-				if (numDependencies == 0)
-				{
-					queue.Enqueue(chip);
+					sorted.Add(chip);
 				}
 			}
 
-			// Process chips in breadth-first order
-			while (queue.Count > 0)
+			// Traverse: for each chip, add all chips it outputs to (if not already in list)
+			while (index < sorted.Count)
 			{
-				SimChip chip = queue.Dequeue();
-				sorted.Add(chip);
+				SimChip chip = sorted[index++];
 
-				// Reduce in-degree of dependent chips
+				// Find all chips that this chip outputs to
 				foreach (SimPin outputPin in chip.OutputPins)
 				{
 					foreach (SimPin targetPin in outputPin.ConnectedTargetPins)
 					{
 						SimChip dependent = targetPin.parentChip;
 
-						// Skip self-loops
-						if (dependent == chip)
+						// Skip self-loops and custom chips (shouldn't be in primitives list anyway)
+						if (dependent == chip || dependent.ChipType == ChipType.Custom)
 							continue;
 
-						if (inDegree.ContainsKey(dependent))
+						// Add to traversal list if not already present
+						if (!sorted.Contains(dependent))
 						{
-							inDegree[dependent]--;
-							if (inDegree[dependent] == 0)
-							{
-								queue.Enqueue(dependent);
-							}
+							sorted.Add(dependent);
 						}
 					}
 				}
 			}
 
-			// Handle cycles: any chips not yet sorted are in cycles
-			// Add them in arbitrary order
+			// Ensure we didn't miss any chips (shouldn't happen, but defensive)
 			foreach (SimChip chip in chips)
 			{
 				if (!sorted.Contains(chip))
@@ -233,6 +248,57 @@ namespace DLS.Simulation
 			}
 
 			return sorted;
+		}
+
+		/// <summary>
+		/// Check if a chip has no connected inputs (all input pins have zero connections)
+		/// </summary>
+		static bool HasNoConnectedInputs(SimChip chip)
+		{
+			foreach (SimPin inputPin in chip.InputPins)
+			{
+				if (inputPin.numInputConnections > 0)
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>
+		/// Debug: Calculate the depth of each chip in the sorted list and log it.
+		/// Depth = maximum distance from any chip with no inputs.
+		/// </summary>
+		public static void LogChipDepths()
+		{
+			var depths = new System.Collections.Generic.Dictionary<SimChip, int>();
+
+			// Calculate depths
+			foreach (SimChip chip in sortedPrimitives)
+			{
+				int maxDepth = 0;
+				foreach (SimPin inputPin in chip.InputPins)
+				{
+					foreach (SimPin sourcePin in GetSourcePinsForSort(inputPin))
+					{
+						if (sourcePin.parentChip != chip && depths.ContainsKey(sourcePin.parentChip))
+						{
+							maxDepth = System.Math.Max(maxDepth, depths[sourcePin.parentChip] + 1);
+						}
+					}
+				}
+				depths[chip] = maxDepth;
+			}
+
+			// Log sorted order with depths
+			UnityEngine.Debug.Log($"=== Chip Processing Order (Total: {sortedPrimitives.Count}) ===");
+			for (int i = 0; i < sortedPrimitives.Count; i++)
+			{
+				SimChip chip = sortedPrimitives[i];
+				int depth = depths.ContainsKey(chip) ? depths[chip] : -1;
+				string chipName = $"{chip.ChipType}_{chip.ID}";
+				UnityEngine.Debug.Log($"[{i}] Depth {depth}: {chipName}");
+			}
 		}
 
 		/// <summary>
@@ -407,10 +473,12 @@ namespace DLS.Simulation
 		// Note: this should only be called from the sim thread
 		public static void ApplyModifications()
 		{
+			bool hadModifications = false;
 			while (modificationQueue.Count > 0)
 			{
 				if (modificationQueue.TryDequeue(out SimModifyCommand cmd))
 				{
+					hadModifications = true;
 					if (cmd.type == SimModifyCommand.ModificationType.AddSubchip)
 					{
 						SimChip newSubChip = BuildSimChip(cmd.chipDesc, cmd.lib, cmd.subChipID, cmd.subChipInternalData);
@@ -437,6 +505,12 @@ namespace DLS.Simulation
 						cmd.modifyTarget.RemovePin(cmd.removePinID);
 					}
 				}
+			}
+
+			// If we applied any modifications, we need to rebuild the topological sort
+			if (hadModifications)
+			{
+				needsResort = true;
 			}
 		}
 
