@@ -1,0 +1,150 @@
+{
+  "DLSVersion": "2.1.6",
+  "Name": "D flip-flop (broken)",
+  "NameLocation": 0,
+  "ChipType": 0,
+  "Size": {
+    "x": 1.85,
+    "y": 1.0
+  },
+  "Colour": {
+    "r": 0.3613315,
+    "g": 0.5938789,
+    "b": 0.49670577,
+    "a": 1
+  },
+  "InputPins":[
+    {
+      "Name":"D",
+      "ID":1897237354,
+      "Position":{
+        "x":-7.0,
+        "y":1.75
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"4CLK",
+      "ID":2042325217,
+      "Position":{
+        "x":-7.0,
+        "y":1.25
+      },
+      "BitCount":4,
+      "Colour":2,
+      "ValueDisplayMode":0
+    }
+  ],
+  "OutputPins":[
+    {
+      "Name":"Q",
+      "ID":726893793,
+      "Position":{
+        "x":4.5,
+        "y":1.625
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    }
+  ],
+  "SubChips":[
+    {
+      "Name":"D Latch",
+      "ID":1445538571,
+      "Label":"Slave",
+      "Position":{
+        "x":1.585,
+        "y":1.5625
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":2103799855},{"PinColour":0,"PinID":1897387291}],
+      "InternalData":null
+    },
+    {
+      "Name":"D Latch",
+      "ID":594723470,
+      "Label":"Master",
+      "Position":{
+        "x":-2.665,
+        "y":1.5625
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":2103799855},{"PinColour":0,"PinID":1897387291}],
+      "InternalData":null
+    }
+  ],
+  "Wires":[
+    {
+      "SourcePinAddress":{
+        "PinID":2103799855,
+        "PinOwnerID":594723470
+      },
+      "TargetPinAddress":{
+        "PinID":901965440,
+        "PinOwnerID":1445538571
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":1897237354
+      },
+      "TargetPinAddress":{
+        "PinID":901965440,
+        "PinOwnerID":594723470
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":2103799855,
+        "PinOwnerID":1445538571
+      },
+      "TargetPinAddress":{
+        "PinID":0,
+        "PinOwnerID":726893793
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":2042325217
+      },
+      "TargetPinAddress":{
+        "PinID":403191520,
+        "PinOwnerID":594723470
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":-3.75,"y":1.25},{"x":-3.75,"y":1.4375},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":2042325217
+      },
+      "TargetPinAddress":{
+        "PinID":403191520,
+        "PinOwnerID":1445538571
+      },
+      "ConnectionType":1,
+      "ConnectedWireIndex":3,
+      "ConnectedWireSegmentIndex":0,
+      "Points":[{"x":-5.00124,"y":1.25},{"x":-5.0,"y":1.0},{"x":0.5,"y":1.0},{"x":0.5,"y":1.4375},{"x":0.0,"y":0.0}]
+    }
+  ],
+  "Displays": null
+}

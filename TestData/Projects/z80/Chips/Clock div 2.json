@@ -1,0 +1,113 @@
+{
+  "Name": "Clock div 2",
+  "NameLocation": 0,
+  "ChipType": 0,
+  "Size": {
+    "x": 0.875,
+    "y": 0.5
+  },
+  "Colour": {
+    "r": 0.331212074,
+    "g": 0.9561578,
+    "b": 0.876741052,
+    "a": 1
+  },
+  "InputPins":[
+    {
+      "Name":"Clock",
+      "ID":1519533119,
+      "Position":{
+        "x":-17.5,
+        "y":0.75
+      },
+      "BitCount":1,
+      "Colour":2,
+      "ValueDisplayMode":0
+    }
+  ],
+  "OutputPins":[
+    {
+      "Name":"OUT",
+      "ID":1095439039,
+      "Position":{
+        "x":-11.875,
+        "y":1.0
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    }
+  ],
+  "SubChips":[
+    {
+      "Name":"JK flip-flop (M-S)",
+      "ID":361711404,
+      "Label":"",
+      "Position":{
+        "x":-15.115,
+        "y":0.75
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":1287751675},{"PinColour":0,"PinID":2080869127}],
+      "InternalData":null
+    }
+  ],
+  "Wires":[
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":1519533119
+      },
+      "TargetPinAddress":{
+        "PinID":949412870,
+        "PinOwnerID":361711404
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":2080869127,
+        "PinOwnerID":361711404
+      },
+      "TargetPinAddress":{
+        "PinID":1347366145,
+        "PinOwnerID":361711404
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":-13.875,"y":0.5},{"x":-13.875,"y":1.3125},{"x":-16.375,"y":1.3125},{"x":-16.375,"y":1.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":1287751675,
+        "PinOwnerID":361711404
+      },
+      "TargetPinAddress":{
+        "PinID":605614759,
+        "PinOwnerID":361711404
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":-13.75,"y":1.0},{"x":-13.75,"y":0.25},{"x":-16.375,"y":0.25},{"x":-16.375,"y":0.5},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":1287751675,
+        "PinOwnerID":361711404
+      },
+      "TargetPinAddress":{
+        "PinID":0,
+        "PinOwnerID":1095439039
+      },
+      "ConnectionType":1,
+      "ConnectedWireIndex":2,
+      "ConnectedWireSegmentIndex":0,
+      "Points":[{"x":-13.75,"y":1.0},{"x":0.0,"y":0.0}]
+    }
+  ],
+  "Displays":[]
+}

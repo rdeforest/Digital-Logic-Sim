@@ -36,6 +36,7 @@ namespace DLS.Game
 
 		// ---- Dev shortcuts ----
 		public static bool OpenSaveDataFolderShortcutTriggered => InputHelper.IsKeyDownThisFrame(KeyCode.O) && InputHelper.CtrlIsHeld && InputHelper.ShiftIsHeld && InputHelper.AltIsHeld;
+		public static bool ToggleSimulationModeShortcutTriggered => CtrlShiftShortcutTriggered(KeyCode.M);
 
 		// ---- Modifiers ----
 		public static bool SnapModeHeld => InputHelper.CtrlIsHeld;

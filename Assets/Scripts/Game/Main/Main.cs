@@ -118,6 +118,15 @@ namespace DLS.Game
 		static void HandleGlobalInput()
 		{
 			if (KeyboardShortcuts.OpenSaveDataFolderShortcutTriggered) OpenSaveDataFolderInFileBrowser();
+
+			// Toggle simulation mode with Ctrl+Shift+M
+			if (KeyboardShortcuts.ToggleSimulationModeShortcutTriggered)
+			{
+				Simulation.Simulator.CurrentMode = Simulation.Simulator.CurrentMode == Description.SimulationMode.DepthFirst
+					? Description.SimulationMode.BreadthFirst
+					: Description.SimulationMode.DepthFirst;
+				UnityEngine.Debug.Log($"Switched to {Simulation.Simulator.CurrentMode} simulation mode");
+			}
 		}
 
 		public class Version

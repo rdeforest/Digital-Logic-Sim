@@ -1,0 +1,184 @@
+{
+  "Name": "16b Mem Addr Register",
+  "NameLocation": 0,
+  "ChipType": 0,
+  "Size": {
+    "x": 2.15,
+    "y": 2.25
+  },
+  "Colour": {
+    "r": 0.71297,
+    "g": 0.0760045052,
+    "b": 0.508538365,
+    "a": 1
+  },
+  "InputPins":[
+    {
+      "Name":"Clock",
+      "ID":674466066,
+      "Position":{
+        "x":-11.0,
+        "y":4.0
+      },
+      "BitCount":1,
+      "Colour":7,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"Read",
+      "ID":123232073,
+      "Position":{
+        "x":-11.0,
+        "y":3.5
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"Math",
+      "ID":1676644298,
+      "Position":{
+        "x":-11.0,
+        "y":2.875
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"In High",
+      "ID":374492622,
+      "Position":{
+        "x":-11.0,
+        "y":2.375
+      },
+      "BitCount":8,
+      "Colour":4,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"In Low",
+      "ID":2001301957,
+      "Position":{
+        "x":-11.0,
+        "y":1.875
+      },
+      "BitCount":8,
+      "Colour":3,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"Incr/Store",
+      "ID":358431225,
+      "Position":{
+        "x":-11.0,
+        "y":1.25
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"Neg / Reset",
+      "ID":1114214667,
+      "Position":{
+        "x":-11.0,
+        "y":0.6875
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    }
+  ],
+  "OutputPins":[
+    {
+      "Name":"Out High",
+      "ID":425040003,
+      "Position":{
+        "x":-3.25,
+        "y":3.125
+      },
+      "BitCount":8,
+      "Colour":0,
+      "ValueDisplayMode":2
+    },
+    {
+      "Name":"Out Low",
+      "ID":1127125964,
+      "Position":{
+        "x":-3.375,
+        "y":1.125
+      },
+      "BitCount":8,
+      "Colour":0,
+      "ValueDisplayMode":1
+    }
+  ],
+  "SubChips":[
+    {
+      "Name":"AND",
+      "ID":1025528160,
+      "Label":"",
+      "Position":{
+        "x":-7.9525,
+        "y":3.375
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":639735518}],
+      "InternalData":null
+    },
+    {
+      "Name":"OR",
+      "ID":1875434457,
+      "Label":"",
+      "Position":{
+        "x":-7.1525,
+        "y":3.25
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":1807642279}],
+      "InternalData":null
+    },
+    {
+      "Name":"NOT",
+      "ID":1758309988,
+      "Label":"",
+      "Position":{
+        "x":-8.8275,
+        "y":3.5
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":1345798992}],
+      "InternalData":null
+    }
+  ],
+  "Wires":[
+    {
+      "SourcePinAddress":{
+        "PinID":1345798992,
+        "PinOwnerID":1758309988
+      },
+      "TargetPinAddress":{
+        "PinID":1349044488,
+        "PinOwnerID":1025528160
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":639735518,
+        "PinOwnerID":1025528160
+      },
+      "TargetPinAddress":{
+        "PinID":1640040524,
+        "PinOwnerID":1875434457
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    }
+  ],
+  "Displays": null
+}

@@ -1,0 +1,73 @@
+{
+  "DLSVersion": "2.1.6",
+  "Name": "NAND - cNand",
+  "NameLocation": 0,
+  "ChipType": 0,
+  "Size": {
+    "x": 1.1,
+    "y": 0.5
+  },
+  "Colour": {
+    "r": 0.223399818,
+    "g": 0.0239537172,
+    "b": 0.2797645,
+    "a": 1
+  },
+  "InputPins":[],
+  "OutputPins":[],
+  "SubChips":[
+    {
+      "Name":"NAND",
+      "ID":833482626,
+      "Label":"",
+      "Position":{
+        "x":-5.875,
+        "y":0.25
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":2}],
+      "InternalData":null
+    },
+    {
+      "Name":"cNAND",
+      "ID":753587431,
+      "Label":"",
+      "Position":{
+        "x":-3.9275,
+        "y":0.25
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":171373827}],
+      "InternalData":null
+    }
+  ],
+  "Wires":[
+    {
+      "SourcePinAddress":{
+        "PinID":2,
+        "PinOwnerID":833482626
+      },
+      "TargetPinAddress":{
+        "PinID":810656990,
+        "PinOwnerID":753587431
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    },
+    {
+      "SourcePinAddress":{
+        "PinID":2,
+        "PinOwnerID":833482626
+      },
+      "TargetPinAddress":{
+        "PinID":414199616,
+        "PinOwnerID":753587431
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    }
+  ],
+  "Displays": null
+}

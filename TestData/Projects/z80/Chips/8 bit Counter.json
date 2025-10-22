@@ -1,0 +1,67 @@
+{
+  "Name": "8 bit Counter",
+  "NameLocation": 0,
+  "ChipType": 0,
+  "Size": {
+    "x": 1.775,
+    "y": 0.75
+  },
+  "Colour": {
+    "r": 0.41348058,
+    "g": 0.0142204575,
+    "b": 0.5751486,
+    "a": 1
+  },
+  "InputPins":[
+    {
+      "Name":"4CLK",
+      "ID":1191839763,
+      "Position":{
+        "x":-6.625,
+        "y":1.9375
+      },
+      "BitCount":4,
+      "Colour":7,
+      "ValueDisplayMode":2
+    }
+  ],
+  "OutputPins":[
+    {
+      "Name":"Overflow",
+      "ID":2109058142,
+      "Position":{
+        "x":1.0,
+        "y":2.5
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    },
+    {
+      "Name":"Counter",
+      "ID":1759871091,
+      "Position":{
+        "x":1.0,
+        "y":1.0
+      },
+      "BitCount":8,
+      "Colour":0,
+      "ValueDisplayMode":1
+    }
+  ],
+  "SubChips":[
+    {
+      "Name":"NOT",
+      "ID":1612051571,
+      "Label":"",
+      "Position":{
+        "x":-3.7025,
+        "y":1.375
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":1345798992}],
+      "InternalData":null
+    }
+  ],
+  "Wires":[],
+  "Displays": null
+}

@@ -1,0 +1,60 @@
+{
+  "DLSVersion": "2.1.6",
+  "Name": "TestClock",
+  "NameLocation": 0,
+  "ChipType": 0,
+  "Size": {
+    "x": 1.475,
+    "y": 1.0
+  },
+  "Colour": {
+    "r": 0.2,
+    "g": 0.2,
+    "b": 0.25,
+    "a": 1
+  },
+  "InputPins":[],
+  "OutputPins":[
+    {
+      "Name":"OUT",
+      "ID":1,
+      "Position":{
+        "x":2.0,
+        "y":0.0
+      },
+      "BitCount":1,
+      "Colour":0,
+      "ValueDisplayMode":0
+    }
+  ],
+  "SubChips":[
+    {
+      "Name":"CLOCK",
+      "ID":100,
+      "Label":"Clock",
+      "Position":{
+        "x":0.0,
+        "y":0.0
+      },
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":0}],
+      "InternalData":null
+    }
+  ],
+  "Wires":[
+    {
+      "SourcePinAddress":{
+        "PinID":0,
+        "PinOwnerID":100
+      },
+      "TargetPinAddress":{
+        "PinID":0,
+        "PinOwnerID":1
+      },
+      "ConnectionType":0,
+      "ConnectedWireIndex":-1,
+      "ConnectedWireSegmentIndex":-1,
+      "Points":[{"x":0.0,"y":0.0},{"x":0.0,"y":0.0}]
+    }
+  ],
+  "Displays": null
+}
