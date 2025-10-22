@@ -799,11 +799,24 @@ namespace DLS.Simulation
 
 		static bool HasNoConnectedInputs(SimChip chip)
 		{
+			// A chip has "no connected inputs" if none of its inputs come from other primitive chips
+			// (inputs from dev pins/custom chips don't count as they're processed separately)
 			foreach (SimPin inputPin in chip.InputPins)
 			{
-				if (inputPin.numInputConnections > 0)
+				// Check if any source is another primitive chip
+				foreach (SimChip primitive in allPrimitiveChips)
 				{
-					return false;
+					foreach (SimPin outputPin in primitive.OutputPins)
+					{
+						// Check if this output connects to our input
+						for (int i = 0; i < outputPin.ConnectedTargetPins.Length; i++)
+						{
+							if (outputPin.ConnectedTargetPins[i] == inputPin && primitive != chip)
+							{
+								return false; // This chip receives input from another primitive
+							}
+						}
+					}
 				}
 			}
 			return true;
