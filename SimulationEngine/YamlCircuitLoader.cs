@@ -88,11 +88,15 @@ namespace DLS.Simulation
 		public static ChipDescription LoadChipFromProject(string projectName, string chipName, string? testDataPath = null)
 		{
 			// Default to TestData in repository root
-			testDataPath ??= Path.Combine(
-				Directory.GetCurrentDirectory(),
-				"..", "..", "..", "..", // Navigate up from bin/Debug/net8.0/
-				"TestData", "Projects"
-			);
+			if (testDataPath == null)
+			{
+				// Get assembly location and navigate up to project root
+				// From: Tests/PerfTest/bin/Release/net9.0/ -> up 5 levels to project root
+				string assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
+				string assemblyDir = Path.GetDirectoryName(assemblyLocation) ?? Directory.GetCurrentDirectory();
+				string projectRoot = Path.GetFullPath(Path.Combine(assemblyDir, "..", "..", "..", "..", ".."));
+				testDataPath = Path.Combine(projectRoot, "TestData", "Projects");
+			}
 
 			string chipPath = Path.Combine(testDataPath, projectName, "Chips", $"{chipName}.json");
 
@@ -112,6 +116,51 @@ namespace DLS.Simulation
 			}
 
 			return chip;
+		}
+
+		/// <summary>
+		/// Load all chips from a project directory into a ChipLibrary.
+		/// Loads from TestData/Projects/{projectName}/Chips/
+		/// </summary>
+		public static ChipLibrary LoadProjectChipLibrary(string projectName, string? testDataPath = null)
+		{
+			var library = new ChipLibrary();
+
+			// Get project chips directory
+			if (testDataPath == null)
+			{
+				string assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
+				string assemblyDir = Path.GetDirectoryName(assemblyLocation) ?? Directory.GetCurrentDirectory();
+				string projectRoot = Path.GetFullPath(Path.Combine(assemblyDir, "..", "..", "..", "..", ".."));
+				testDataPath = Path.Combine(projectRoot, "TestData", "Projects");
+			}
+
+			string chipsDir = Path.Combine(testDataPath, projectName, "Chips");
+
+			if (!Directory.Exists(chipsDir))
+			{
+				throw new DirectoryNotFoundException($"Project chips directory not found: {chipsDir}");
+			}
+
+			// Load all .json files
+			foreach (string chipFile in Directory.GetFiles(chipsDir, "*.json"))
+			{
+				try
+				{
+					string json = File.ReadAllText(chipFile);
+					var chip = Newtonsoft.Json.JsonConvert.DeserializeObject<ChipDescription>(json);
+					if (chip != null)
+					{
+						library.AddChip(chip);
+					}
+				}
+				catch
+				{
+					// Skip files that fail to load
+				}
+			}
+
+			return library;
 		}
 
 		// Legacy support for old YAML format

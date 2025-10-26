@@ -26,13 +26,14 @@ namespace DLS.PerfTest
 		/// </summary>
 		public static TestResult RunTestVector(
 			ChipDescription chipDesc,
+			ChipLibrary library,
 			Dictionary<string, int> inputs,
 			Dictionary<string, int> expected,
 			int maxCycles,
 			SimulationMode mode)
 		{
 			// Build simulation
-			var rootChip = SimulatorStandalone.BuildSimChip(chipDesc);
+			var rootChip = Simulator.BuildSimChip(chipDesc, library);
 
 			// Configure
 			Simulator.CurrentMode = mode;

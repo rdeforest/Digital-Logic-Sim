@@ -1,0 +1,12 @@
+---
+name: SR Latch Convergence Test
+project: z80
+circuit: SR latch
+max_cycles_per_test: 50
+
+test_vectors:
+  - inputs: {Set: 1, Release: 0}
+    expected: {Q: 1}
+  
+  - inputs: {Set: 0, Release: 1}
+    expected: {Q: 0}

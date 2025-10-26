@@ -16,7 +16,10 @@ namespace DLS.PerfTest
 			Console.WriteLine($"Test Vectors: {testSpec.TestVectors?.Count ?? 0}");
 			Console.WriteLine();
 
-			// Load chip from project
+			// Load all chips from the project (needed for dependencies)
+			var library = YamlCircuitLoader.LoadProjectChipLibrary(testSpec.Project!);
+
+			// Load the specific chip we're testing
 			var chip = YamlCircuitLoader.LoadChipFromProject(testSpec.Project!, testSpec.Circuit!);
 			Console.WriteLine($"Loaded circuit with {CountPrimitives(chip)} primitives");
 			Console.WriteLine();
@@ -31,26 +34,27 @@ namespace DLS.PerfTest
 			if (compare || mode == "dfs")
 			{
 				Console.WriteLine("=== DFS Results ===");
-				RunConvergenceTestsForMode(chip, testSpec, SimulationMode.DepthFirst);
+				RunConvergenceTestsForMode(chip, library, testSpec, SimulationMode.DepthFirst);
 				Console.WriteLine();
 			}
 
 			if (compare || mode == "bfs")
 			{
 				Console.WriteLine("=== BFS Results ===");
-				RunConvergenceTestsForMode(chip, testSpec, SimulationMode.BreadthFirst);
+				RunConvergenceTestsForMode(chip, library, testSpec, SimulationMode.BreadthFirst);
 				Console.WriteLine();
 			}
 
 			if (compare)
 			{
 				Console.WriteLine("=== Comparison ===");
-				CompareResults(chip, testSpec);
+				CompareResults(chip, library, testSpec);
 			}
 		}
 
 		static void RunConvergenceTestsForMode(
 			ChipDescription chip,
+			ChipLibrary library,
 			YamlCircuitLoader.TestSpec testSpec,
 			SimulationMode mode)
 		{
@@ -71,6 +75,7 @@ namespace DLS.PerfTest
 
 				var result = ConvergenceTest.RunTestVector(
 					chip,
+					library,
 					testVector.Inputs!,
 					testVector.Expected!,
 					testSpec.MaxCyclesPerTest,
@@ -101,7 +106,7 @@ namespace DLS.PerfTest
 			Console.WriteLine($"  Total evaluations: {totalEvals:N0}");
 		}
 
-		static void CompareResults(ChipDescription chip, YamlCircuitLoader.TestSpec testSpec)
+		static void CompareResults(ChipDescription chip, ChipLibrary library, YamlCircuitLoader.TestSpec testSpec)
 		{
 			Console.WriteLine("Running side-by-side comparison...\n");
 
@@ -116,6 +121,7 @@ namespace DLS.PerfTest
 
 				var dfsResult = ConvergenceTest.RunTestVector(
 					chip,
+					library,
 					testVector.Inputs!,
 					testVector.Expected!,
 					testSpec.MaxCyclesPerTest,
@@ -123,6 +129,7 @@ namespace DLS.PerfTest
 
 				var bfsResult = ConvergenceTest.RunTestVector(
 					chip,
+					library,
 					testVector.Inputs!,
 					testVector.Expected!,
 					testSpec.MaxCyclesPerTest,

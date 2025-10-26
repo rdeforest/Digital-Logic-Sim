@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using DLS.Description;
-using DLS.Game;
 using Random = System.Random;
 
 namespace DLS.Simulation
@@ -13,7 +12,7 @@ namespace DLS.Simulation
 		static readonly Stopwatch stopwatch = Stopwatch.StartNew();
 		public static int stepsPerClockTransition;
 		public static int simulationFrame;
-		static uint pcg_rngState;
+		internal static uint pcg_rngState;
 
 		// Simulation mode selection (can be changed at runtime)
 		public static SimulationMode CurrentMode = SimulationMode.DepthFirst;
@@ -24,10 +23,10 @@ namespace DLS.Simulation
 		// Every n frames the simulation permits some random modifications to traversal order of sequential chips (to randomize outcome of race conditions)
 		public static bool canDynamicReorderThisFrame;
 
-		static SimChip prevRootSimChip;
+		internal static SimChip prevRootSimChip;
 		static double elapsedSecondsOld;
 		static double deltaTime;
-		static SimAudio audioState;
+		// SimAudio removed - Unity dependency
 
 		// Modifications to the sim are made from the main thread, but only applied on the sim thread to avoid conflicts
 		static readonly ConcurrentQueue<SimModifyCommand> modificationQueue = new();
@@ -63,6 +62,9 @@ namespace DLS.Simulation
 		//   (would have to make exception for chips containing things like clock or key chip, which can activate 'spontaneously')
 		// * Create simplified connections network allowing only builtin chips to be processed during simulation
 
+		// Unity-dependent version - commented out for standalone simulator
+		// Use SimulatorStandalone.RunSimulationStep() instead
+		/*
 		public static void RunSimulationStep(SimChip rootSimChip, DevPinInstance[] inputPins, SimAudio audioState)
 		{
 			Simulator.audioState = audioState;
@@ -122,7 +124,10 @@ namespace DLS.Simulation
 
 			UpdateAudioState();
 		}
+		*/
 
+		// Audio methods commented out - Unity dependency
+		/*
 		public static void UpdateInPausedState()
 		{
 			if (audioState != null)
@@ -140,9 +145,10 @@ namespace DLS.Simulation
 			elapsedSecondsOld = stopwatch.Elapsed.TotalSeconds;
 			audioState.NotifyAllNotesRegistered(deltaTime);
 		}
+		*/
 
 		// Recursively propagate signals through this chip and its subchips
-		static void StepChip(SimChip chip)
+		internal static void StepChip(SimChip chip)
 		{
 			// Propagate signal from all input dev-pins to all their connected pins
 			chip.Sim_PropagateInputs();
@@ -177,7 +183,7 @@ namespace DLS.Simulation
 		// Recursively propagate signals through this chip and its subchips
 		// In the process, reorder all subchips based on order in which they become ready for processing (have received all their inputs)
 		// Note: the order here is reversed, so those ready first will be at the end of the array
-		static void StepChipReorder(SimChip chip)
+		internal static void StepChipReorder(SimChip chip)
 		{
 			chip.Sim_PropagateInputs();
 
@@ -243,10 +249,13 @@ namespace DLS.Simulation
 			return nextSubChipIndex;
 		}
 
+		// Unity dependency - commented out
+		/*
 		public static void UpdateKeyboardInputFromMainThread()
 		{
 			SimKeyboardHelper.RefreshInputState();
 		}
+		*/
 
 		public static bool RandomBool()
 		{
@@ -383,8 +392,9 @@ namespace DLS.Simulation
 				}
 				case ChipType.Key:
 				{
-					bool isHeld = SimKeyboardHelper.KeyIsHeld((char)chip.InternalState[0]);
-					chip.OutputPins[0].State = isHeld ? PinState.LogicHigh : PinState.LogicLow;
+					// Unity dependency removed - always returns LogicLow (not pressed) in standalone mode
+					// bool isHeld = SimKeyboardHelper.KeyIsHeld((char)chip.InternalState[0]);
+					chip.OutputPins[0].State = PinState.LogicLow;
 					break;
 				}
 				case ChipType.DisplayRGB:
@@ -534,9 +544,10 @@ namespace DLS.Simulation
 				}
 				case ChipType.Buzzer:
 				{
-					int freqIndex = PinState.GetBitStates(chip.InputPins[0].State);
-					int volumeIndex = PinState.GetBitStates(chip.InputPins[1].State);
-					audioState.RegisterNote(freqIndex, (uint)volumeIndex);
+					// Unity dependency removed - no audio in standalone mode
+					// int freqIndex = PinState.GetBitStates(chip.InputPins[0].State);
+					// int volumeIndex = PinState.GetBitStates(chip.InputPins[1].State);
+					// audioState.RegisterNote(freqIndex, (uint)volumeIndex);
 					break;
 				}
 				// ---- Bus types ----
@@ -703,7 +714,7 @@ namespace DLS.Simulation
 
 		// ========== BREADTH-FIRST ALGORITHM IMPLEMENTATION ==========
 
-		static void RunBreadthFirstStep(SimChip rootSimChip)
+		internal static void RunBreadthFirstStep(SimChip rootSimChip)
 		{
 			// Handle root chip change or modifications
 			if (rootSimChip != prevRootSimChip || needsResort)
