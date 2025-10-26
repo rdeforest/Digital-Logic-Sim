@@ -1,0 +1,10 @@
+---
+name: single NAND loop
+cycles: 1000
+circuit:
+  parts:
+    - nand0:
+        type: nand
+  wires:
+    - from: nand0.out0
+      to: [nand0.in0, nand0.in1]

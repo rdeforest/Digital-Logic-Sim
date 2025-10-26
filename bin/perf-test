@@ -1,0 +1,15 @@
+#!/bin/bash
+# Wrapper script for perf-test tool
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+PERF_TEST="$PROJECT_ROOT/Tests/PerfTest/bin/Debug/net8.0/PerfTest"
+
+# Build if binary doesn't exist
+if [ ! -f "$PERF_TEST" ]; then
+    echo "Building perf-test..."
+    dotnet build "$PROJECT_ROOT/Tests/PerfTest/PerfTest.csproj"
+fi
+
+# Run the actual tool
+exec "$PERF_TEST" "$@"

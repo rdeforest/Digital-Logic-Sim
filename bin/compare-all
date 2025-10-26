@@ -1,0 +1,35 @@
+#!/bin/bash
+# Compare DFS vs BFS performance on all test circuits
+
+set -e
+
+PERF_TEST="./Tests/PerfTest/bin/Debug/net8.0/PerfTest"
+CIRCUITS_DIR="tests/circuits"
+RESULTS_FILE="perf-results.txt"
+
+# Build the project first
+echo "Building perf-test..."
+dotnet build Tests/PerfTest/PerfTest.csproj
+
+echo "==================================="
+echo "Performance Comparison Test Suite"
+echo "==================================="
+echo
+
+# Clear previous results
+> "$RESULTS_FILE"
+
+# Run tests on all circuits
+for circuit in "$CIRCUITS_DIR"/*.yaml; do
+    echo "========================================" | tee -a "$RESULTS_FILE"
+    echo "Testing: $(basename "$circuit")" | tee -a "$RESULTS_FILE"
+    echo "========================================" | tee -a "$RESULTS_FILE"
+    "$PERF_TEST" "$circuit" | tee -a "$RESULTS_FILE"
+    echo | tee -a "$RESULTS_FILE"
+done
+
+echo "Results saved to: $RESULTS_FILE"
+echo
+echo "Summary of key metrics:"
+echo "======================="
+grep -A 1 "=== Testing" "$RESULTS_FILE" | grep -E "(Testing|Primitive Evaluations|Wall Time)" || true

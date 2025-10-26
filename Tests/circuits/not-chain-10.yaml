@@ -1,0 +1,45 @@
+---
+name: NOT chain (10 gates)
+cycles: 1000
+circuit:
+  inputs:
+    - in0: 1bit
+  outputs:
+    - out0: 1bit
+  parts:
+    - nand0: {type: nand}
+    - nand1: {type: nand}
+    - nand2: {type: nand}
+    - nand3: {type: nand}
+    - nand4: {type: nand}
+    - nand5: {type: nand}
+    - nand6: {type: nand}
+    - nand7: {type: nand}
+    - nand8: {type: nand}
+    - nand9: {type: nand}
+  wires:
+    # Input to first NOT
+    - from: in0
+      to: [nand0.in0, nand0.in1]
+    # Chain the NOTs
+    - from: nand0.out0
+      to: [nand1.in0, nand1.in1]
+    - from: nand1.out0
+      to: [nand2.in0, nand2.in1]
+    - from: nand2.out0
+      to: [nand3.in0, nand3.in1]
+    - from: nand3.out0
+      to: [nand4.in0, nand4.in1]
+    - from: nand4.out0
+      to: [nand5.in0, nand5.in1]
+    - from: nand5.out0
+      to: [nand6.in0, nand6.in1]
+    - from: nand6.out0
+      to: [nand7.in0, nand7.in1]
+    - from: nand7.out0
+      to: [nand8.in0, nand8.in1]
+    - from: nand8.out0
+      to: [nand9.in0, nand9.in1]
+    # Last NOT to output
+    - from: nand9.out0
+      to: out0
