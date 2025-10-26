@@ -9,31 +9,42 @@ using YamlDotNet.Serialization.NamingConventions;
 namespace DLS.Simulation
 {
 	/// <summary>
-	/// Loads circuit definitions from YAML files.
+	/// Loads test configurations from YAML files.
+	/// References existing DLS projects and circuits.
 	///
 	/// Example YAML format:
 	/// ---
-	/// name: single NAND loop
-	/// cycles: 1000
-	/// circuit:
-	///   inputs:
-	///     - in0: 1bit
-	///   outputs:
-	///     - out0: 1bit
-	///   parts:
-	///     - nand0:
-	///         type: nand
-	///   wires:
-	///     - from: nand0.out0
-	///       to: [nand0.in0, nand0.in1]
+	/// name: 4x4 Multiplier Test
+	/// project: z80
+	/// circuit: 4x4 mult
+	/// max_cycles_per_test: 100
+	/// test_vectors:
+	///   - inputs: {A: 3, B: 4}
+	///     expected: {OUT: 12}
 	/// </summary>
 	public class YamlCircuitLoader
 	{
+		public class TestSpec
+		{
+			public string Name { get; set; } = "";
+			public string? Project { get; set; }  // Project name (loads from TestData/Projects/{name}/)
+			public string? Circuit { get; set; }  // Circuit name within project
+			public int MaxCyclesPerTest { get; set; } = 100;
+			public List<TestVector>? TestVectors { get; set; }
+		}
+
+		public class TestVector
+		{
+			public Dictionary<string, int>? Inputs { get; set; }
+			public Dictionary<string, int>? Expected { get; set; }
+		}
+
+		// Legacy format support (for backwards compatibility with simple YAML circuits)
 		public class CircuitSpec
 		{
 			public string Name { get; set; } = "";
 			public int Cycles { get; set; } = 1000;
-			public CircuitDefinition Circuit { get; set; } = new();
+			public CircuitDefinition? Circuit { get; set; }
 		}
 
 		public class CircuitDefinition
@@ -55,6 +66,55 @@ namespace DLS.Simulation
 			public object? To { get; set; } // Can be string or List<string>
 		}
 
+		public static TestSpec LoadTestFromFile(string yamlFilePath)
+		{
+			var yaml = File.ReadAllText(yamlFilePath);
+			return LoadTestFromString(yaml);
+		}
+
+		public static TestSpec LoadTestFromString(string yaml)
+		{
+			var deserializer = new DeserializerBuilder()
+				.WithNamingConvention(UnderscoredNamingConvention.Instance)
+				.Build();
+
+			return deserializer.Deserialize<TestSpec>(yaml);
+		}
+
+		/// <summary>
+		/// Load a chip from a DLS project.
+		/// Looks in TestData/Projects/{projectName}/Chips/{chipName}.json
+		/// </summary>
+		public static ChipDescription LoadChipFromProject(string projectName, string chipName, string? testDataPath = null)
+		{
+			// Default to TestData in repository root
+			testDataPath ??= Path.Combine(
+				Directory.GetCurrentDirectory(),
+				"..", "..", "..", "..", // Navigate up from bin/Debug/net8.0/
+				"TestData", "Projects"
+			);
+
+			string chipPath = Path.Combine(testDataPath, projectName, "Chips", $"{chipName}.json");
+
+			if (!File.Exists(chipPath))
+			{
+				throw new FileNotFoundException($"Chip not found: {chipPath}");
+			}
+
+			string json = File.ReadAllText(chipPath);
+
+			// Use the existing DLS serializer
+			var chip = Newtonsoft.Json.JsonConvert.DeserializeObject<ChipDescription>(json);
+
+			if (chip == null)
+			{
+				throw new Exception($"Failed to deserialize chip: {chipName}");
+			}
+
+			return chip;
+		}
+
+		// Legacy support for old YAML format
 		public static (ChipDescription chip, int cycles) LoadFromFile(string yamlFilePath)
 		{
 			var yaml = File.ReadAllText(yamlFilePath);
@@ -68,6 +128,12 @@ namespace DLS.Simulation
 				.Build();
 
 			var spec = deserializer.Deserialize<CircuitSpec>(yaml);
+
+			if (spec.Circuit == null)
+			{
+				throw new Exception("Legacy YAML format requires 'circuit' section");
+			}
+
 			var chip = BuildChipDescription(spec);
 			return (chip, spec.Cycles);
 		}

@@ -6,7 +6,7 @@ using DLS.Description;
 
 namespace DLS.PerfTest
 {
-	class Program
+	partial class Program
 	{
 		static void Main(string[] args)
 		{
@@ -28,27 +28,38 @@ namespace DLS.PerfTest
 
 			try
 			{
-				// Load circuit from YAML
-				var (chip, cycles) = YamlCircuitLoader.LoadFromFile(yamlFile);
-				Console.WriteLine($"=== Loaded Circuit: {chip.Name} ===");
-				Console.WriteLine($"Primitives: {CountPrimitives(chip)}");
-				Console.WriteLine($"Cycles to simulate: {cycles}");
-				Console.WriteLine();
+				// Try to load as new test format first
+				var testSpec = YamlCircuitLoader.LoadTestFromFile(yamlFile);
 
-				if (compare || mode == "dfs")
+				if (testSpec.Project != null && testSpec.Circuit != null)
 				{
-					RunTest(chip, cycles, SimulationMode.DepthFirst);
+					// New format: project + circuit reference
+					RunConvergenceTests(testSpec, compare, mode);
 				}
-
-				if (compare || mode == "bfs")
+				else
 				{
-					RunTest(chip, cycles, SimulationMode.BreadthFirst);
-				}
+					// Legacy format: inline circuit definition
+					var (chip, cycles) = YamlCircuitLoader.LoadFromFile(yamlFile);
+					Console.WriteLine($"=== Loaded Circuit: {chip.Name} ===");
+					Console.WriteLine($"Primitives: {CountPrimitives(chip)}");
+					Console.WriteLine($"Cycles to simulate: {cycles}");
+					Console.WriteLine();
 
-				if (compare)
-				{
-					Console.WriteLine("\n=== Comparison ===");
-					Console.WriteLine("Run both modes above to compare results");
+					if (compare || mode == "dfs")
+					{
+						RunTest(chip, cycles, SimulationMode.DepthFirst);
+					}
+
+					if (compare || mode == "bfs")
+					{
+						RunTest(chip, cycles, SimulationMode.BreadthFirst);
+					}
+
+					if (compare)
+					{
+						Console.WriteLine("\n=== Comparison ===");
+						Console.WriteLine("Run both modes above to compare results");
+					}
 				}
 			}
 			catch (Exception ex)

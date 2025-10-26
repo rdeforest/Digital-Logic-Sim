@@ -6,9 +6,11 @@ This is a standalone, YAML-based performance testing framework for comparing the
 
 ## Key Features
 
-- **Hardware-Independent Metrics** - Measures logical operations, not wall-clock time
-- **CPU Performance Metrics** - Also tracks actual execution time for real-world comparison
-- **YAML Circuit Format** - Simple, declarative circuit definitions
+- **Convergence Testing** - Measures cycles until circuit outputs reach expected values
+- **Test Vectors** - Apply inputs and verify outputs for correctness + performance
+- **Project Integration** - Load circuits from existing DLS projects (no conversion needed!)
+- **Hardware-Independent Metrics** - Counts logical operations, not just time
+- **CPU Performance Metrics** - Also tracks actual execution time
 - **Standalone Execution** - No Unity dependency, runs as console app
 
 ## Quick Start
@@ -30,40 +32,94 @@ bin/perf-test tests/circuits/not-chain-10.yaml --mode bfs
 bin/compare-all
 ```
 
-## YAML Circuit Format
+## YAML Test Format (New!)
 
-Circuits are defined in a simple YAML format:
+**Test circuits from existing DLS projects:**
+
+```yaml
+---
+name: 4x4 Multiplier Convergence Test
+project: z80                    # Load from TestData/Projects/z80/
+circuit: 4x4 mult               # Load this chip from the project
+max_cycles_per_test: 100        # Timeout if circuit doesn't converge
+
+# Test vectors: apply inputs, verify outputs
+test_vectors:
+  - inputs: {A: 3, B: 4}
+    expected: {OUT: 12}
+
+  - inputs: {A: 7, B: 8}
+    expected: {OUT: 56}
+
+  - inputs: {A: 15, B: 15}
+    expected: {OUT: 225}
+```
+
+### How It Works
+
+1. **Loads circuit from DLS project** - Reuses existing JSON files, no conversion
+2. **Applies inputs** - Sets input pin states to specified values
+3. **Runs simulation** - Cycles until outputs match expected values
+4. **Measures convergence** - Counts cycles to reach correct answer
+5. **Compares algorithms** - Shows which converges faster
+
+### Example Output
+
+```
+=== 4x4 Multiplier Convergence Test ===
+Project: z80
+Circuit: 4x4 mult
+Loaded circuit with 15 primitives
+
+=== DFS Results ===
+Test 1: A=3, B=4 → OUT=12
+  ✓ Converged in 5 cycles
+  Evaluations: 87, Wall Time: 0.234 ms
+
+Test 2: A=7, B=8 → OUT=56
+  ✓ Converged in 5 cycles
+  Evaluations: 89, Wall Time: 0.241 ms
+
+=== BFS Results ===
+Test 1: A=3, B=4 → OUT=12
+  ✓ Converged in 3 cycles
+  Evaluations: 65, Wall Time: 0.189 ms
+
+Test 2: A=7, B=8 → OUT=56
+  ✓ Converged in 3 cycles
+  Evaluations: 67, Wall Time: 0.193 ms
+
+=== Comparison ===
+Test 1: A=3, B=4
+  DFS: 5 cycles
+  BFS: 3 cycles
+  → BFS wins by 2 cycles
+
+🏆 BFS is faster for this circuit!
+```
+
+## Legacy YAML Circuit Format
+
+For simple circuits without a DLS project, you can still define circuits inline:
 
 ```yaml
 ---
 name: My Circuit Name
-cycles: 1000  # Number of simulation steps to run
+cycles: 1000
 
 circuit:
-  # Optional: circuit inputs
   inputs:
     - in0: 1bit
-    - in1: 1bit
-
-  # Optional: circuit outputs
   outputs:
     - out0: 1bit
-
-  # Parts (subchips/gates)
   parts:
     - nand0: {type: nand}
-    - nand1: {type: nand}
-
-  # Wiring between parts
   wires:
-    # Single target
     - from: in0
-      to: nand0.in0
-
-    # Multiple targets (fan-out)
-    - from: nand0.out0
-      to: [nand1.in0, nand1.in1, out0]
+      to: [nand0.in0, nand0.in1]
 ```
+
+This format doesn't support test vectors or convergence testing.
 
 ### Pin Addressing
 

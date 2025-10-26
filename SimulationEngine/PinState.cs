@@ -32,6 +32,12 @@ namespace DLS.Simulation
 
 		public static bool FirstBitHigh(uint state) => (state & 1) == LogicHigh;
 
+	/// <summary>
+	/// Get the numeric value of the pin state (ignoring tri-state flags).
+	/// Returns the bit states as an unsigned integer.
+	/// </summary>
+	public static int GetUInt(uint state) => GetBitStates(state);
+
 		public static void Set4BitFrom8BitSource(ref uint state, uint source8bit, bool firstNibble)
 		{
 			ushort sourceBitStates = GetBitStates(source8bit);
