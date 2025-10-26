@@ -1,0 +1,140 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/Tests/PerfTest/PerfTest.csproj": {}
+  },
+  "projects": {
+    "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/SimulationEngine/SimulationEngine.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/SimulationEngine/SimulationEngine.csproj",
+        "projectName": "SimulationEngine",
+        "projectPath": "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/SimulationEngine/SimulationEngine.csproj",
+        "packagesPath": "/Users/robert/.nuget/packages/",
+        "outputPath": "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/SimulationEngine/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/robert/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "YamlDotNet": {
+              "target": "Package",
+              "version": "[15.1.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/Tests/PerfTest/PerfTest.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/Tests/PerfTest/PerfTest.csproj",
+        "projectName": "PerfTest",
+        "projectPath": "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/Tests/PerfTest/PerfTest.csproj",
+        "packagesPath": "/Users/robert/.nuget/packages/",
+        "outputPath": "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/Tests/PerfTest/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/robert/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/SimulationEngine/SimulationEngine.csproj": {
+                "projectPath": "/Users/robert/git/github/rdeforest/Digital-Logic-Sim/SimulationEngine/SimulationEngine.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

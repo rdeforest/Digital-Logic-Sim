@@ -12,28 +12,28 @@ The key innovation is measuring **logical work** rather than wall-clock time, ma
 
 | Metric | Description | Interpretation |
 |--------|-------------|----------------|
-| **Primitive Evaluations** | Number of primitive chips processed | Total work done |
-| **Pin State Changes** | Number of pins that actually changed value | Useful work (causes downstream changes) |
-| **Wasted Evaluations** | Chips evaluated but outputs unchanged | Inefficiency indicator |
-| **Pin Propagations** | Total signal copies between pins | Communication overhead |
-| **Simulation Steps** | Number of simulation frames executed | Test duration |
+| **Primitive Evaluations** | Number of primitive chips processed        | Total work done                         |
+| **Pin State Changes**     | Number of pins that actually changed value | Useful work (causes downstream changes) |
+| **Wasted Evaluations**    | Chips evaluated but outputs unchanged      | Inefficiency indicator                  |
+| **Pin Propagations**      | Total signal copies between pins           | Communication overhead                  |
+| **Simulation Steps**      | Number of simulation frames executed       | Test duration                           |
 
 ### Efficiency Ratios
 
 | Ratio | Formula | Ideal Value |
 |-------|---------|-------------|
-| **Evaluation Efficiency** | 1.0 - (Wasted / Total Evals) | 1.0 (no waste) |
+| **Evaluation Efficiency**  | 1.0 - (Wasted / Total Evals) | 1.0 (no waste)                        |
 | **Propagation Efficiency** | State Changes / Propagations | 1.0 (every propagation causes change) |
-| **Avg Evals/Step** | Primitive Evals / Sim Steps | Lower is better (less work per frame) |
+| **Avg Evals/Step**         | Primitive Evals / Sim Steps  | Lower is better (less work per frame) |
 
 ### Algorithm-Specific Metrics
 
 | Metric | DFS | BFS |
 |--------|-----|-----|
-| **Resort Operations** | N/A | Counts topological re-sorts |
-| **Dynamic Reorder Attempts** | Chip swaps for race conditions | N/A |
-| **Ready Checks** | "Are inputs ready?" calls | N/A |
-| **Max Call Stack Depth** | Maximum recursion depth | N/A (iterative) |
+| **Resort Operations**        | N/A                            | Counts topological re-sorts |
+| **Dynamic Reorder Attempts** | Chip swaps for race conditions | N/A                         |
+| **Ready Checks**             | "Are inputs ready?" calls      | N/A                         |
+| **Max Call Stack Depth**     | Maximum recursion depth        | N/A (iterative)             |
 
 ## Using the Metrics System
 

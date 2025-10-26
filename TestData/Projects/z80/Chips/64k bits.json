@@ -1,10 +1,11 @@
 {
+  "DLSVersion": "2.1.6",
   "Name": "64k bits",
   "NameLocation": 0,
   "ChipType": 0,
   "Size": {
     "x": 1.025,
-    "y": 2.25
+    "y": 1.5
   },
   "Colour": {
     "r": 0.180161938,
@@ -32,7 +33,7 @@
         "y":3.625
       },
       "BitCount":1,
-      "Colour":1,
+      "Colour":2,
       "ValueDisplayMode":0
     },
     {
@@ -43,7 +44,7 @@
         "y":-1.8125
       },
       "BitCount":8,
-      "Colour":3,
+      "Colour":4,
       "ValueDisplayMode":0
     },
     {
@@ -54,7 +55,7 @@
         "y":-11.25
       },
       "BitCount":8,
-      "Colour":2,
+      "Colour":3,
       "ValueDisplayMode":0
     }
   ],
@@ -80,7 +81,7 @@
         "x":-9.5525,
         "y":-1.8125
       },
-      "OutputPinColourInfo":[{"PinColour":0,"PinID":1},{"PinColour":3,"PinID":2}],
+      "OutputPinColourInfo":[{"PinColour":0,"PinID":1},{"PinColour":4,"PinID":2}],
       "InternalData":null
     },
     {
@@ -267,7 +268,7 @@
         "x":-7.1775,
         "y":-1.625
       },
-      "OutputPinColourInfo":[{"PinColour":3,"PinID":1},{"PinColour":3,"PinID":2},{"PinColour":2,"PinID":3},{"PinColour":2,"PinID":4}],
+      "OutputPinColourInfo":[{"PinColour":4,"PinID":1},{"PinColour":4,"PinID":2},{"PinColour":3,"PinID":3},{"PinColour":3,"PinID":4}],
       "InternalData":null
     },
     {
@@ -300,7 +301,7 @@
         "x":-4.3775,
         "y":5.0625
       },
-      "OutputPinColourInfo":[{"PinColour":3,"PinID":290489439},{"PinColour":3,"PinID":1171922794},{"PinColour":3,"PinID":1894652180},{"PinColour":3,"PinID":2057148131}],
+      "OutputPinColourInfo":[{"PinColour":4,"PinID":290489439},{"PinColour":4,"PinID":1171922794},{"PinColour":4,"PinID":1894652180},{"PinColour":4,"PinID":2057148131}],
       "InternalData":null
     },
     {
@@ -311,7 +312,7 @@
         "x":-5.2525,
         "y":-2.25
       },
-      "OutputPinColourInfo":[{"PinColour":2,"PinID":290489439},{"PinColour":2,"PinID":1171922794},{"PinColour":2,"PinID":1894652180},{"PinColour":2,"PinID":2057148131}],
+      "OutputPinColourInfo":[{"PinColour":3,"PinID":290489439},{"PinColour":3,"PinID":1171922794},{"PinColour":3,"PinID":1894652180},{"PinColour":3,"PinID":2057148131}],
       "InternalData":null
     }
   ],
