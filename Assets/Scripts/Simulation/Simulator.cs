@@ -690,6 +690,11 @@ namespace DLS.Simulation
 
 		// ========== BREADTH-FIRST ALGORITHM IMPLEMENTATION ==========
 
+		public static void SetNeedsResort()
+		{
+			needsResort = true;
+		}
+
 		static void RunBreadthFirstStep(SimChip rootSimChip)
 		{
 			// Handle root chip change or modifications
@@ -699,6 +704,7 @@ namespace DLS.Simulation
 				CollectPrimitiveChips(rootSimChip, allPrimitiveChips);
 				sortedPrimitives = TopologicalSort(allPrimitiveChips);
 				needsResort = false;
+				prevRootSimChip = rootSimChip;
 			}
 
 			// Propagate root chip inputs through the circuit hierarchy

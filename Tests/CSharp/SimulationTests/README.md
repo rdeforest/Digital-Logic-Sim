@@ -37,7 +37,7 @@ Coverage report will be generated at `coverage/coverage.info` (lcov format).
 
 ## Test Structure
 
-### TopologicalSortTests.cs
+### TopologicalSortTests.cs (7 tests - all passing)
 Tests the breadth-first topological sort algorithm used for signal propagation.
 
 **Key tests:**
@@ -46,6 +46,42 @@ Tests the breadth-first topological sort algorithm used for signal propagation.
 - `TopologicalSort_CycleHandling` - Validates feedback loop handling (SR latches)
 
 This algorithm is critical for correct signal propagation through the circuit graph.
+
+### AlgorithmEquivalenceTests.cs (9 tests - skipped, awaiting Unity integration)
+Documents what needs to be tested to ensure DFS and BFS simulation modes produce equivalent results for combinational logic.
+
+**Planned tests:**
+- NOT, AND, OR gate equivalence
+- Full adder (complex combinational circuit)
+- Wide fanout stress test
+- Deeply nested custom chips
+- Mode switching state preservation
+- Race condition behavior documentation (SR latches)
+
+These tests are currently skipped because they require Unity simulation infrastructure. They serve as:
+1. Documentation of what needs testing
+2. Template for future integration tests
+3. Regression test checklist
+
+### PerformanceBenchmarks.cs (8 tests - skipped, awaiting implementation)
+Measures and compares performance of DFS and BFS simulation modes.
+
+**Metrics tracked:**
+- Cycles per second (simulation throughput)
+- Primitives per second (gate evaluations/second)
+- Memory usage patterns
+- Resort/reorder overhead
+
+**Planned benchmarks:**
+- Simple chain (100 NOT gates)
+- Wide fanout (1→100→1)
+- Deep nesting (100 levels)
+- **64k RAM circuit** (extreme case with thousands of gates)
+- Sequential logic (counters, registers)
+- Mode switching overhead
+- Partial evaluation optimization check
+
+These benchmarks will help identify performance regressions and compare algorithm efficiency.
 
 ## Current Approach
 

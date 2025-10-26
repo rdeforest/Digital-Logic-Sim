@@ -125,6 +125,11 @@ namespace DLS.Game
 				Simulation.Simulator.CurrentMode = Simulation.Simulator.CurrentMode == Description.SimulationMode.DepthFirst
 					? Description.SimulationMode.BreadthFirst
 					: Description.SimulationMode.DepthFirst;
+
+				// Force reordering/resorting when switching modes
+				Simulation.Simulator.needsOrderPass = true;  // For DFS mode
+				Simulation.Simulator.SetNeedsResort();        // For BFS mode
+
 				UnityEngine.Debug.Log($"Switched to {Simulation.Simulator.CurrentMode} simulation mode");
 			}
 		}
