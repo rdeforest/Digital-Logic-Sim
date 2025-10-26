@@ -32,6 +32,13 @@ namespace DLS.Simulation
 		// Modifications to the sim are made from the main thread, but only applied on the sim thread to avoid conflicts
 		static readonly ConcurrentQueue<SimModifyCommand> modificationQueue = new();
 
+		// ===== Performance Metrics (Hardware-Independent) =====
+		/// <summary>Enable/disable metrics collection (has small performance cost)</summary>
+		public static bool EnableMetrics = false;
+
+		/// <summary>Current metrics collector instance</summary>
+		public static SimulationMetrics Metrics { get; private set; } = new SimulationMetrics();
+
 		// ===== Breadth-First Mode Data Structures =====
 		// Flat list of all primitive (non-custom) chips in the current circuit
 		static System.Collections.Generic.List<SimChip> allPrimitiveChips = new();
@@ -70,6 +77,12 @@ namespace DLS.Simulation
 			pcg_rngState = (uint)rng.Next();
 			canDynamicReorderThisFrame = simulationFrame % 100 == 0;
 			simulationFrame++; //
+
+			// Track simulation step
+			if (EnableMetrics)
+			{
+				Metrics.RecordSimulationStep();
+			}
 
 			// Step 1) Get player-controlled input states and copy values to the sim
 			foreach (DevPinInstance input in inputPins)
